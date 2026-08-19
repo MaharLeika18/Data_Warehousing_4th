@@ -30,6 +30,7 @@ class PipelineConfig:
     COMPLETED_STATUS_VALUE: str
     NUMERIC_VALIDATION_COLUMNS: list
     CATEGORICAL_UPPERCASE_COLUMNS: list
+    DATETIME_FORMATS: dict
     PII_COLUMNS: list
     PII_SALT: bytes
     DEDUP_KEY_COLUMNS: list
@@ -39,6 +40,9 @@ class PipelineConfig:
     PARQUET_COMPRESSION: str
     QUARANTINE_PATH: str
     QUARANTINE_FORMAT: str
+    QUARANTINE_FILENAME: str
+    QUARANTINE_FILENAME_PREFIX: str
+    QUARANTINE_APPEND: bool
     LOG_PATH: str
     LOG_LEVEL: str
 
@@ -55,7 +59,7 @@ def get_config() -> PipelineConfig:
     return PipelineConfig(
         SQLITE_DB_PATH = input("Enter the path to your SQLite database file (.db): ") or "ladringan_saldua_prelim_project/data/orders_export.db",
         SOURCE_TABLE = input("Enter table name inside database file to be used: ") or "cart_events",
-        BATCH_SIZE = int(input("Enter number of rows to pull per batch: ")) or 5000,
+        BATCH_SIZE = int(input("Enter number of rows to pull per batch: ") or 5000),
 
         SOURCE_SCHEMA = {
             "order_id":             "int64",
@@ -88,6 +92,9 @@ def get_config() -> PipelineConfig:
 
         NUMERIC_VALIDATION_COLUMNS = ["item_price", "cart_action_count"],
         CATEGORICAL_UPPERCASE_COLUMNS = ["order_status", "product_department"],
+        DATETIME_FORMATS = {
+            "order_timestamp": "%Y-%m-%d %H:%M:%S%z", 
+        },
 
         DEDUP_KEY_COLUMNS = [
             "order_status", 
@@ -100,16 +107,19 @@ def get_config() -> PipelineConfig:
         ],
 
         # Hive-partitioned Parquet Output
-        PARTITION_COLUMNS = ["product_department"],      # electronics
+        PARTITION_COLUMNS = ["product_department"],      
         DATALAKE_PATH = input("Enter the path to data lake: ") or "ladringan_saldua_prelim_project/data/analytics",
         PARQUET_COMPRESSION = "snappy",
 
         # Quarantine
-        QUARANTINE_PATH = input("Enter the path to quarantine logs: ") or "ladringan_saldua_prelim_project/quarantine",
+        QUARANTINE_PATH = input("Enter the path to quarantine log: ") or "ladringan_saldua_prelim_project/quarantine",
         QUARANTINE_FORMAT = "csv",
+        QUARANTINE_FILENAME = "null_product_ids.csv",
+        QUARANTINE_FILENAME_PREFIX = "null_product_ids",
+        QUARANTINE_APPEND = False, # TRUE for append mode FALSE for new file mode
 
         # Logging
-        LOG_PATH = input("Enter the path to the pipeline logs: ") or "ladringan_saldua_prelim_project/logs",
+        LOG_PATH = input("Enter the path to the pipeline log: ") or "ladringan_saldua_prelim_project/logs/cart_runs.log",
         LOG_LEVEL = "DEBUG", # INFO for default, DEBUG for verbose
     )
 
@@ -143,9 +153,12 @@ def log_stage(logger, stage: str, in_count: int, out_count: int, quarantined: in
 #--- Quarantine Procedure
  
 class QuarantineManager:
-    def __init__(self, output_path: str, output_format: str, logger: logging.Logger):
-        self.output_path = Path(output_path)
-        self.output_format = output_format
+    def __init__(self, cfg: "PipelineConfig", logger: logging.Logger):
+        self.output_path = Path(cfg.QUARANTINE_PATH)
+        self.output_format = cfg.QUARANTINE_FORMAT
+        self.append = cfg.QUARANTINE_APPEND
+        self.filename = cfg.QUARANTINE_FILENAME
+        self.filename_prefix = cfg.QUARANTINE_FILENAME_PREFIX
         self.logger = logger
         self._batches: list[pd.DataFrame] = []
 
@@ -165,18 +178,36 @@ class QuarantineManager:
 
         self.output_path.mkdir(parents=True, exist_ok=True)
         combined = pd.concat(self._batches, ignore_index=True)
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
 
-        if self.output_format == "parquet":
-            file_path = self.output_path / f"quarantine_{stamp}.parquet"
-            combined.to_parquet(file_path, index=False)
+        if self.append:
+            file_path = self.output_path / self.filename
+            file_exists = file_path.exists()
+
+            if self.output_format == "parquet":
+                if file_exists:
+                    existing = pd.read_parquet(file_path)
+                    combined = pd.concat([existing, combined], ignore_index=True)
+                combined.to_parquet(file_path, index=False)
+            else:
+                combined.to_csv(
+                    file_path,
+                    mode="a" if file_exists else "w",
+                    header=not file_exists,
+                    index=False,
+                )
         else:
-            file_path = self.output_path / f"quarantine_{stamp}.csv"
-            combined.to_csv(file_path, index=False)
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+            ext = "parquet" if self.output_format == "parquet" else "csv"
+            file_path = self.output_path / f"{self.filename_prefix}_{stamp}.{ext}"
+
+            if self.output_format == "parquet":
+                combined.to_parquet(file_path, index=False)
+            else:
+                combined.to_csv(file_path, index=False)
 
         self.logger.info(f"Flushed {len(combined)} quarantined row(s) to {file_path}")
         return len(combined)
-
+    
 #--- Extract
 
 def fetch_source_batches(cfg: PipelineConfig, logger: logging.Logger):
@@ -212,7 +243,11 @@ def validate_batch_schema(df: pd.DataFrame, cfg: PipelineConfig, quarantine: Qua
             continue
         try:
             if dtype == "datetime64[ns]":
-                coerced = pd.to_datetime(df[col], errors="coerce")
+                fmt = cfg.DATETIME_FORMATS.get(col)
+                if fmt:
+                    coerced = pd.to_datetime(df[col], format=fmt, errors="coerce")
+                else:
+                    coerced = pd.to_datetime(df[col], format="mixed", errors="coerce")
             elif dtype in ("int64", "float64"):
                 coerced = pd.to_numeric(df[col], errors="coerce")
                 if dtype == "int64":
@@ -283,8 +318,6 @@ def check_negative_values(df: pd.DataFrame, cfg: PipelineConfig, quarantine: Qua
 
     return good_rows
 
-
-
 #--- PII Masking
 
 def hash_pii_value(value: str, salt: bytes) -> str:
@@ -348,7 +381,11 @@ def enforce_output_dtypes(df: pd.DataFrame, cfg: PipelineConfig) -> pd.DataFrame
         if col not in df.columns:
             continue
         if dtype == "datetime64[ns]":
-            df[col] = pd.to_datetime(df[col], errors="coerce")
+            fmt = cfg.DATETIME_FORMATS.get(col)
+            if fmt:
+                coerced = pd.to_datetime(df[col], format=fmt, errors="coerce")
+            else:
+                coerced = pd.to_datetime(df[col], format="mixed", errors="coerce")
         elif dtype == "int64":
             df[col] = df[col].astype("Int64")   # nullable int, avoids float upcasting on NaN
         elif dtype == "float64":
@@ -387,7 +424,7 @@ def write_partitioned_parquet(df: pd.DataFrame, cfg: PipelineConfig, logger: log
 def run_pipeline() -> dict:
     cfg = get_config()
     logger = setup_logger(cfg.LOG_PATH, cfg.LOG_LEVEL)
-    quarantine = QuarantineManager(cfg.QUARANTINE_PATH, cfg.QUARANTINE_FORMAT, logger)
+    quarantine = QuarantineManager(cfg, logger)
 
     logger.info("Pipeline run started")
 

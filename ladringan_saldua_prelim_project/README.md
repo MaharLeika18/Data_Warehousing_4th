@@ -17,4 +17,4 @@
    your table's actual columns.
 
 5. Run the pipeline:
-   python pipeline.py
+   python ladringan_saldua_prelim_project/cart_analytics_orchestrator.py
