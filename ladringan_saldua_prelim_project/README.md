@@ -1,4 +1,4 @@
-# Data_Warehousing_4th
+# Prelim Mini Project
 ### Project 7: E-Commerce Real-Time Inventory & Abandoned Cart Analytics
 An end-to-end, production-grade, fault-tolerant data pipeline that ingests data from a simulated transactional database, implements schema validation and cryptographic PII data masking, isolates operational errors, and writes optimized, analytical outputs to a simulated data lake.
 
