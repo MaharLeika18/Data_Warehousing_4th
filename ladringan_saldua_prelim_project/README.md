@@ -5,6 +5,9 @@ An end-to-end, production-grade, fault-tolerant data pipeline that ingests data 
 The data workflow eliminates duplicate session actions, quarantines rows with missing identifiers, computes total abandoned product metrics, and constructs a high-performance Hive-partitioned directory layout structured by product department.
 
 
+![Pipeline Diagram](ladringan_saldua_prelim_project\img\Diagram.png)
+
+
 ## Setup
 
 1. Install dependencies:
