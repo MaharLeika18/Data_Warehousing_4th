@@ -2206,3 +2206,404 @@
 2026-08-19 23:36:49 | INFO | Wrote 15 row(s) to 'ladringan_saldua_prelim_project/data/analytics/abandoned_metrics' partitioned by ['product_department']
 2026-08-19 23:36:49 | INFO | Flushed 26387 quarantined row(s) to ladringan_saldua_prelim_project/quarantine/null_product_ids.csv
 2026-08-19 23:36:49 | INFO | Pipeline run complete: {'total_in': 490398, 'total_out': 454499, 'quarantined': 26387}
+2026-08-20 21:57:38 | INFO | Pipeline run started
+2026-08-20 21:57:38 | WARNING | Quarantined 148 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:38 | WARNING | Quarantined 111 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:38 | INFO | Dropped 69 duplicate session action(s)
+2026-08-20 21:57:38 | INFO | [batch_1] in=5000 out=4672 quarantined=328
+2026-08-20 21:57:38 | WARNING | Quarantined 140 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:38 | WARNING | Quarantined 116 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:38 | INFO | Dropped 73 duplicate session action(s)
+2026-08-20 21:57:38 | INFO | [batch_2] in=5000 out=4671 quarantined=329
+2026-08-20 21:57:38 | WARNING | Quarantined 149 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:38 | WARNING | Quarantined 110 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:38 | INFO | Dropped 96 duplicate session action(s)
+2026-08-20 21:57:38 | INFO | [batch_3] in=5000 out=4645 quarantined=355
+2026-08-20 21:57:38 | WARNING | Quarantined 149 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:38 | WARNING | Quarantined 102 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:38 | INFO | Dropped 77 duplicate session action(s)
+2026-08-20 21:57:38 | INFO | [batch_4] in=5000 out=4672 quarantined=328
+2026-08-20 21:57:39 | WARNING | Quarantined 140 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 120 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 87 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_5] in=5000 out=4653 quarantined=347
+2026-08-20 21:57:39 | WARNING | Quarantined 148 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 118 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 76 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_6] in=5000 out=4658 quarantined=342
+2026-08-20 21:57:39 | WARNING | Quarantined 152 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 132 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 72 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_7] in=5000 out=4644 quarantined=356
+2026-08-20 21:57:39 | WARNING | Quarantined 167 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 132 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 83 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_8] in=5000 out=4618 quarantined=382
+2026-08-20 21:57:39 | WARNING | Quarantined 123 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 132 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 71 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_9] in=5000 out=4674 quarantined=326
+2026-08-20 21:57:39 | WARNING | Quarantined 167 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 135 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 108 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_10] in=5000 out=4590 quarantined=410
+2026-08-20 21:57:39 | WARNING | Quarantined 159 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 128 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 95 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_11] in=5000 out=4618 quarantined=382
+2026-08-20 21:57:39 | WARNING | Quarantined 145 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 129 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 95 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_12] in=5000 out=4631 quarantined=369
+2026-08-20 21:57:39 | WARNING | Quarantined 137 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 116 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 106 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_13] in=5000 out=4641 quarantined=359
+2026-08-20 21:57:39 | WARNING | Quarantined 134 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 123 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 106 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_14] in=5000 out=4637 quarantined=363
+2026-08-20 21:57:39 | WARNING | Quarantined 142 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 128 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 117 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_15] in=5000 out=4613 quarantined=387
+2026-08-20 21:57:39 | WARNING | Quarantined 140 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 112 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 98 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_16] in=5000 out=4650 quarantined=350
+2026-08-20 21:57:39 | WARNING | Quarantined 157 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 124 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 106 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_17] in=5000 out=4613 quarantined=387
+2026-08-20 21:57:39 | WARNING | Quarantined 160 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 105 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 113 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_18] in=5000 out=4622 quarantined=378
+2026-08-20 21:57:39 | WARNING | Quarantined 150 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 109 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 98 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_19] in=5000 out=4643 quarantined=357
+2026-08-20 21:57:39 | WARNING | Quarantined 151 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 124 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 113 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_20] in=5000 out=4612 quarantined=388
+2026-08-20 21:57:39 | WARNING | Quarantined 158 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 114 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:39 | INFO | Dropped 113 duplicate session action(s)
+2026-08-20 21:57:39 | INFO | [batch_21] in=5000 out=4615 quarantined=385
+2026-08-20 21:57:39 | WARNING | Quarantined 141 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:39 | WARNING | Quarantined 113 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 115 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_22] in=5000 out=4631 quarantined=369
+2026-08-20 21:57:40 | WARNING | Quarantined 146 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 119 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 103 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_23] in=5000 out=4632 quarantined=368
+2026-08-20 21:57:40 | WARNING | Quarantined 141 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 124 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 134 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_24] in=5000 out=4601 quarantined=399
+2026-08-20 21:57:40 | WARNING | Quarantined 164 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 127 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 114 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_25] in=5000 out=4595 quarantined=405
+2026-08-20 21:57:40 | WARNING | Quarantined 150 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 116 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 116 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_26] in=5000 out=4618 quarantined=382
+2026-08-20 21:57:40 | WARNING | Quarantined 146 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 124 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 104 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_27] in=5000 out=4626 quarantined=374
+2026-08-20 21:57:40 | WARNING | Quarantined 128 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 124 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 110 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_28] in=5000 out=4638 quarantined=362
+2026-08-20 21:57:40 | WARNING | Quarantined 148 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 134 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 110 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_29] in=5000 out=4608 quarantined=392
+2026-08-20 21:57:40 | WARNING | Quarantined 123 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 113 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 111 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_30] in=5000 out=4653 quarantined=347
+2026-08-20 21:57:40 | WARNING | Quarantined 153 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 121 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 119 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_31] in=5000 out=4607 quarantined=393
+2026-08-20 21:57:40 | WARNING | Quarantined 115 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 112 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 109 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_32] in=5000 out=4664 quarantined=336
+2026-08-20 21:57:40 | WARNING | Quarantined 150 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 105 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 108 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_33] in=5000 out=4637 quarantined=363
+2026-08-20 21:57:40 | WARNING | Quarantined 153 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 114 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 139 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_34] in=5000 out=4594 quarantined=406
+2026-08-20 21:57:40 | WARNING | Quarantined 158 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 121 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 125 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_35] in=5000 out=4596 quarantined=404
+2026-08-20 21:57:40 | WARNING | Quarantined 150 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 114 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:40 | INFO | Dropped 123 duplicate session action(s)
+2026-08-20 21:57:40 | INFO | [batch_36] in=5000 out=4613 quarantined=387
+2026-08-20 21:57:40 | WARNING | Quarantined 150 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:40 | WARNING | Quarantined 128 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 127 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_37] in=5000 out=4595 quarantined=405
+2026-08-20 21:57:41 | WARNING | Quarantined 166 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 132 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 100 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_38] in=5000 out=4602 quarantined=398
+2026-08-20 21:57:41 | WARNING | Quarantined 127 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 118 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 106 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_39] in=5000 out=4649 quarantined=351
+2026-08-20 21:57:41 | WARNING | Quarantined 143 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 113 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 99 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_40] in=5000 out=4645 quarantined=355
+2026-08-20 21:57:41 | WARNING | Quarantined 161 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 94 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 105 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_41] in=5000 out=4640 quarantined=360
+2026-08-20 21:57:41 | WARNING | Quarantined 142 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 131 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 111 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_42] in=5000 out=4616 quarantined=384
+2026-08-20 21:57:41 | WARNING | Quarantined 150 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 97 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 85 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_43] in=5000 out=4668 quarantined=332
+2026-08-20 21:57:41 | WARNING | Quarantined 138 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 121 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 82 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_44] in=5000 out=4659 quarantined=341
+2026-08-20 21:57:41 | WARNING | Quarantined 138 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 113 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 86 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_45] in=5000 out=4663 quarantined=337
+2026-08-20 21:57:41 | WARNING | Quarantined 138 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 139 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 93 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_46] in=5000 out=4630 quarantined=370
+2026-08-20 21:57:41 | WARNING | Quarantined 160 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 128 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 77 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_47] in=5000 out=4635 quarantined=365
+2026-08-20 21:57:41 | WARNING | Quarantined 178 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 136 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 84 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_48] in=5000 out=4602 quarantined=398
+2026-08-20 21:57:41 | WARNING | Quarantined 147 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 120 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 87 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_49] in=5000 out=4646 quarantined=354
+2026-08-20 21:57:41 | WARNING | Quarantined 149 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 128 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 70 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_50] in=5000 out=4653 quarantined=347
+2026-08-20 21:57:41 | WARNING | Quarantined 149 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 113 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:41 | INFO | Dropped 92 duplicate session action(s)
+2026-08-20 21:57:41 | INFO | [batch_51] in=5000 out=4646 quarantined=354
+2026-08-20 21:57:41 | WARNING | Quarantined 144 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:41 | WARNING | Quarantined 125 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 99 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_52] in=5000 out=4632 quarantined=368
+2026-08-20 21:57:42 | WARNING | Quarantined 159 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 112 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 98 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_53] in=5000 out=4631 quarantined=369
+2026-08-20 21:57:42 | WARNING | Quarantined 161 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 125 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 78 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_54] in=5000 out=4636 quarantined=364
+2026-08-20 21:57:42 | WARNING | Quarantined 125 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 135 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 69 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_55] in=5000 out=4671 quarantined=329
+2026-08-20 21:57:42 | WARNING | Quarantined 149 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 121 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 79 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_56] in=5000 out=4651 quarantined=349
+2026-08-20 21:57:42 | WARNING | Quarantined 140 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 133 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 102 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_57] in=5000 out=4625 quarantined=375
+2026-08-20 21:57:42 | WARNING | Quarantined 154 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 131 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 74 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_58] in=5000 out=4641 quarantined=359
+2026-08-20 21:57:42 | WARNING | Quarantined 151 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 120 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 75 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_59] in=5000 out=4654 quarantined=346
+2026-08-20 21:57:42 | WARNING | Quarantined 138 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 132 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 92 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_60] in=5000 out=4638 quarantined=362
+2026-08-20 21:57:42 | WARNING | Quarantined 157 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 121 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 97 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_61] in=5000 out=4625 quarantined=375
+2026-08-20 21:57:42 | WARNING | Quarantined 145 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 111 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 76 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_62] in=5000 out=4668 quarantined=332
+2026-08-20 21:57:42 | WARNING | Quarantined 160 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 124 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 81 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_63] in=5000 out=4635 quarantined=365
+2026-08-20 21:57:42 | WARNING | Quarantined 153 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 136 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 106 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_64] in=5000 out=4605 quarantined=395
+2026-08-20 21:57:42 | WARNING | Quarantined 129 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 121 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 97 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_65] in=5000 out=4653 quarantined=347
+2026-08-20 21:57:42 | WARNING | Quarantined 127 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 127 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 78 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_66] in=5000 out=4668 quarantined=332
+2026-08-20 21:57:42 | WARNING | Quarantined 153 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 112 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 107 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_67] in=5000 out=4628 quarantined=372
+2026-08-20 21:57:42 | WARNING | Quarantined 135 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 131 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 92 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_68] in=5000 out=4642 quarantined=358
+2026-08-20 21:57:42 | WARNING | Quarantined 137 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 123 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 102 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_69] in=5000 out=4638 quarantined=362
+2026-08-20 21:57:42 | WARNING | Quarantined 160 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:42 | WARNING | Quarantined 135 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:42 | INFO | Dropped 102 duplicate session action(s)
+2026-08-20 21:57:42 | INFO | [batch_70] in=5000 out=4603 quarantined=397
+2026-08-20 21:57:43 | WARNING | Quarantined 158 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 125 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 104 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_71] in=5000 out=4613 quarantined=387
+2026-08-20 21:57:43 | WARNING | Quarantined 157 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 112 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 99 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_72] in=5000 out=4632 quarantined=368
+2026-08-20 21:57:43 | WARNING | Quarantined 138 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 106 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 108 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_73] in=5000 out=4648 quarantined=352
+2026-08-20 21:57:43 | WARNING | Quarantined 161 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 115 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 107 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_74] in=5000 out=4617 quarantined=383
+2026-08-20 21:57:43 | WARNING | Quarantined 152 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 120 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 99 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_75] in=5000 out=4629 quarantined=371
+2026-08-20 21:57:43 | WARNING | Quarantined 167 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 120 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 84 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_76] in=5000 out=4629 quarantined=371
+2026-08-20 21:57:43 | WARNING | Quarantined 157 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 109 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 98 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_77] in=5000 out=4636 quarantined=364
+2026-08-20 21:57:43 | WARNING | Quarantined 136 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 135 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 96 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_78] in=5000 out=4633 quarantined=367
+2026-08-20 21:57:43 | WARNING | Quarantined 143 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 114 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 102 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_79] in=5000 out=4641 quarantined=359
+2026-08-20 21:57:43 | WARNING | Quarantined 151 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 129 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 76 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_80] in=5000 out=4644 quarantined=356
+2026-08-20 21:57:43 | WARNING | Quarantined 169 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 134 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 94 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_81] in=5000 out=4603 quarantined=397
+2026-08-20 21:57:43 | WARNING | Quarantined 164 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 115 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 104 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_82] in=5000 out=4617 quarantined=383
+2026-08-20 21:57:43 | WARNING | Quarantined 171 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 115 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 106 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_83] in=5000 out=4608 quarantined=392
+2026-08-20 21:57:43 | WARNING | Quarantined 147 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 122 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 83 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_84] in=5000 out=4648 quarantined=352
+2026-08-20 21:57:43 | WARNING | Quarantined 150 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 122 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 117 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_85] in=5000 out=4611 quarantined=389
+2026-08-20 21:57:43 | WARNING | Quarantined 164 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 112 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 116 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_86] in=5000 out=4608 quarantined=392
+2026-08-20 21:57:43 | WARNING | Quarantined 148 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 130 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 105 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_87] in=5000 out=4617 quarantined=383
+2026-08-20 21:57:43 | WARNING | Quarantined 166 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:43 | WARNING | Quarantined 122 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:43 | INFO | Dropped 71 duplicate session action(s)
+2026-08-20 21:57:43 | INFO | [batch_88] in=5000 out=4641 quarantined=359
+2026-08-20 21:57:44 | WARNING | Quarantined 132 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 136 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 82 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_89] in=5000 out=4650 quarantined=350
+2026-08-20 21:57:44 | WARNING | Quarantined 135 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 134 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 93 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_90] in=5000 out=4638 quarantined=362
+2026-08-20 21:57:44 | WARNING | Quarantined 140 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 113 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 89 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_91] in=5000 out=4658 quarantined=342
+2026-08-20 21:57:44 | WARNING | Quarantined 132 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 109 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 95 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_92] in=5000 out=4664 quarantined=336
+2026-08-20 21:57:44 | WARNING | Quarantined 159 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 113 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 77 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_93] in=5000 out=4651 quarantined=349
+2026-08-20 21:57:44 | WARNING | Quarantined 162 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 112 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 84 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_94] in=5000 out=4642 quarantined=358
+2026-08-20 21:57:44 | WARNING | Quarantined 122 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 125 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 86 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_95] in=5000 out=4667 quarantined=333
+2026-08-20 21:57:44 | WARNING | Quarantined 140 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 114 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 96 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_96] in=5000 out=4650 quarantined=350
+2026-08-20 21:57:44 | WARNING | Quarantined 173 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 121 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 119 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_97] in=5000 out=4587 quarantined=413
+2026-08-20 21:57:44 | WARNING | Quarantined 141 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 115 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 91 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_98] in=5000 out=4653 quarantined=347
+2026-08-20 21:57:44 | WARNING | Quarantined 11 row(s) at stage='check_missing_identifiers' reason='missing_required_identifier'
+2026-08-20 21:57:44 | WARNING | Quarantined 10 row(s) at stage='check_negative_values' reason='negative_numeric_value'
+2026-08-20 21:57:44 | INFO | Dropped 11 duplicate session action(s)
+2026-08-20 21:57:44 | INFO | [batch_99] in=398 out=366 quarantined=32
+2026-08-20 21:58:01 | INFO | Wrote 454499 row(s) to 'ladringan_saldua_prelim_project/data/analytics/events' partitioned by ['product_department']
+2026-08-20 21:58:01 | INFO | Wrote 15 row(s) to 'ladringan_saldua_prelim_project/data/analytics/abandoned_metrics' partitioned by ['product_department']
+2026-08-20 21:58:01 | INFO | Flushed 26387 quarantined row(s) to ladringan_saldua_prelim_project/quarantine/null_product_ids_20260820T135801.csv
+2026-08-20 21:58:01 | INFO | Pipeline run complete: {'total_in': 490398, 'total_out': 454499, 'quarantined': 26387}
