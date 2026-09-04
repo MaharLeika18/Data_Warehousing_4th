@@ -2,6 +2,7 @@ from __future__ import annotations
 import pandas as pd
 import numpy as np
 import os
+import json
 import sqlite3
 import pymongo 
 from pathlib import Path
@@ -25,7 +26,6 @@ class PipelineConfig:
     MONGO_DB_NAME: str
     MONGO_COLLECTION_NAME: str
     LOG_PATH: str
-    LOG_LEVEL: str
 
 def get_config() -> PipelineConfig:
     return PipelineConfig(
@@ -40,11 +40,10 @@ def get_config() -> PipelineConfig:
         MONGO_DB_NAME = "warehouse_db",
         MONGO_COLLECTION_NAME = "sales_documents",
         LOG_PATH= "lesson_4/logs",
-        LOG_LEVEL="DEBUG"   # INFO for default, DEBUG for verbose
     )
 
 # ------ Logging ------
-def setup_logger(log_path: str, level: str) -> logging.Logger:
+def setup_logger(log_path: str, level: str = "info") -> logging.Logger:
     Path(log_path).parent.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger("pipeline")
@@ -62,8 +61,9 @@ def setup_logger(log_path: str, level: str) -> logging.Logger:
     logger.addHandler(console_handler)
     return logger
 
-def log_stage(logger: logging.Logger, stage: str, message: str) -> None:
-    logger.info(f"[{stage}] {message}")
+def log_stage(logger: logging.Logger, stage: str, message: str, level: str = "info") -> None:
+    log_fn = getattr(logger, level.lower(), logger.info)
+    log_fn(f"[{stage}] {message}")
 
 # ------ Connect to DBs ------
 
@@ -98,22 +98,66 @@ def read_csv_file(
         return df
 
     except UnicodeDecodeError as e:
-        logger.warning(f"[EXTRACT] Encoding error in {file_path.name}, retrying with latin-1: {e}")
+        log_stage(logger, "EXTRACT", f"Encoding error in {file_path.name}, retrying with latin-1: {e}", level="warning")
         try:
             df = pd.read_csv(file_path, encoding="latin-1", on_bad_lines="warn")
             df["_source_file"] = file_path.name
             return df
         except Exception as e2:
-            logger.error(f"[EXTRACT] Failed to read {file_path.name} even with fallback encoding: {e2}")
+            log_stage(logger, "EXTRACT", f"Failed to read {file_path.name} even with fallback encoding: {e2}", level="error")
             return None
 
     except (pd.errors.ParserError, pd.errors.EmptyDataError) as e:
-        logger.error(f"[EXTRACT] Failed to parse {file_path.name}: {e}")
+        log_stage(logger, "EXTRACT", f"Failed to parse {file_path.name}: {e}", level="error")
         return None
+
+def read_json_file(
+    file_path: Path, cfg: PipelineConfig, logger: logging.Logger
+) -> list[dict] | None:
+
+    try:
+        raw_text = file_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as e:
+        logger.error(f"Failed to read {file_path.name}: {e}")
+        return None
+
+    # try standard JSON array 
+    try:
+        data = json.loads(raw_text)
+        records = data if isinstance(data, list) else [data]
+        for r in records:
+            r["_source_file"] = file_path.name
+        return records
+    except json.JSONDecodeError:
+        pass
+
+    # try NDJSON 
+    records = []
+    malformed_lines = 0
+    for i, line in enumerate(raw_text.splitlines(), start=1):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            record = json.loads(line)
+            record["_source_file"] = file_path.name
+            record["_source_line"] = i
+            records.append(record)
+        except json.JSONDecodeError:
+            malformed_lines += 1
+
+    if malformed_lines:
+        logger.warning(f"{file_path.name}: {malformed_lines} malformed JSON line(s) skipped")
+
+    if not records:
+        logger.error(f"No valid JSON records found in {file_path.name}")
+        return None
+
+    return records
 
 # ingest into pd dataframe
 def fetch_source_batches(cfg: PipelineConfig, ):
-    logger = setup_logger(cfg.LOG_PATH, cfg.LOG_LEVEL)
+    logger = setup_logger(cfg.LOG_PATH)
     ...     # this means insert function logic here
     log_stage(logger, "EXTRACT", f"Successfully read {len(combined_csv):,} raw rows from CSV and {len(json_records):,} objects from JSON.")
 
@@ -133,7 +177,7 @@ def fetch_source_batches(cfg: PipelineConfig, ):
 
 # reshape tabular data into relational structure for sqlite and nested docs for mongodb
 def reshape_data(cfg: PipelineConfig, ):
-    logger = setup_logger(cfg.LOG_PATH, cfg.LOG_LEVEL)
+    logger = setup_logger(cfg.LOG_PATH)
     ...
     log_stage(logger, "TRANSFORM", f"Dropped {dropped_count:,} duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.")
 
@@ -141,14 +185,14 @@ def reshape_data(cfg: PipelineConfig, ):
 # ------ Load ------
 # insert structured rows into sqlite tables 
 def load_sqlite(cfg: PipelineConfig, ):
-    logger = setup_logger(cfg.LOG_PATH, cfg.LOG_LEVEL)
+    logger = setup_logger(cfg.LOG_PATH)
     ...
     log_stage(logger, "LOAD - SQLITE", f"Successfully inserted {sqlite_row_count:,} rows into SQLite table '{cfg.SQLITE_OUTPUT_TABLE}'.")
 
 
 # push nested docs into mongodb collections
 def load_mongodb(cfg: PipelineConfig, ):
-    logger = setup_logger(cfg.LOG_PATH, cfg.LOG_LEVEL)
+    logger = setup_logger(cfg.LOG_PATH)
     ...
     log_stage(logger, "LOAD - MONGODB", f"Successfully inserted {mongo_doc_count:,} documents into collection '{cfg.MONGO_DB_NAME}.{cfg.MONGO_COLLECTION_NAME}'.")
 
@@ -158,7 +202,7 @@ def load_mongodb(cfg: PipelineConfig, ):
 def run_pipeline() -> dict:
     start_time = time.perf_counter()
     cfg = get_config()
-    logger = setup_logger(cfg.LOG_PATH, cfg.LOG_LEVEL)
+    logger = setup_logger(cfg.LOG_PATH)
     ...
     elapsed = time.perf_counter() - start_time
     log_stage(logger, "COMPLETE", f"Multi-target pipeline execution finished successfully in {elapsed:.2f} seconds.")
