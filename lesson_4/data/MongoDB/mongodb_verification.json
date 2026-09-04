@@ -1,0 +1,103 @@
+{
+  "verified_at_utc": "2026-09-04T16:17:25.959482+00:00",
+  "database": "warehouse_db",
+  "collection": "sales_documents",
+  "document_count": 373,
+  "expected_count": 373,
+  "count_matches_expected": true,
+  "field_type_summary": {
+    "_id": [
+      "ObjectId"
+    ],
+    "product_id": [
+      "int"
+    ],
+    "product_name": [
+      "str"
+    ],
+    "category": [
+      "str"
+    ],
+    "warehouse": [
+      "dict"
+    ],
+    "price": [
+      "float"
+    ],
+    "last_restocked": [
+      "str"
+    ]
+  },
+  "sample_documents": [
+    {
+      "_id": "6a9aef15ce7c5ff3a4a4a4d2",
+      "product_id": 1860,
+      "product_name": "widget a",
+      "category": "CLOTHING",
+      "warehouse": {
+        "warehouse_id": "Warehouse 2",
+        "location": "Aisle 3",
+        "quantity": 100.0,
+        "status": "In Stock"
+      },
+      "price": 19.99,
+      "last_restocked": "20/12/2022"
+    },
+    {
+      "_id": "6a9aef15ce7c5ff3a4a4a4d3",
+      "product_id": 1270,
+      "product_name": "widget b",
+      "category": "CLOTHING",
+      "warehouse": {
+        "warehouse_id": "Warehouse 3",
+        "location": "Aisle 5",
+        "quantity": 200.0,
+        "status": "Out of Stock"
+      },
+      "price": 19.99,
+      "last_restocked": "25/04/2023"
+    },
+    {
+      "_id": "6a9aef15ce7c5ff3a4a4a4d4",
+      "product_id": 1106,
+      "product_name": "widget a",
+      "category": "FURNITURE",
+      "warehouse": {
+        "warehouse_id": "Warehouse 3",
+        "location": "Aisle 3",
+        "quantity": 200.0,
+        "status": "Out of Stock"
+      },
+      "price": 9.99,
+      "last_restocked": "25/04/2023"
+    },
+    {
+      "_id": "6a9aef15ce7c5ff3a4a4a4d5",
+      "product_id": 1700,
+      "product_name": "widget a",
+      "category": "CLOTHING",
+      "warehouse": {
+        "warehouse_id": "Warehouse 2",
+        "location": "Aisle 2",
+        "quantity": 200.0,
+        "status": "In Stock"
+      },
+      "price": 49.99,
+      "last_restocked": "20/12/2022"
+    },
+    {
+      "_id": "6a9aef15ce7c5ff3a4a4a4d6",
+      "product_id": 1020,
+      "product_name": "gadget z",
+      "category": "TOYS",
+      "warehouse": {
+        "warehouse_id": "Warehouse 3",
+        "location": "Aisle 4",
+        "quantity": 300.0,
+        "status": "In Stock"
+      },
+      "price": 19.99,
+      "last_restocked": "20/12/2022"
+    }
+  ]
+}

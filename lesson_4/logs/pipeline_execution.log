@@ -1,0 +1,123 @@
+2026-09-04 23:07:14,221 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:07:14,231 | INFO     | [TRANSFORM] Standardized 'Last Restocked' to ISO format.Valid dates before: 800, after: 800.
+2026-09-04 23:07:14,235 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:07:14,236 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:07:14,261 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:07:14,269 | INFO     | [LOAD - SQLITE] Successfully inserted 834 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:07:17,729 | INFO     | [LOAD - MONGODB] Successfully inserted 834 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:07:17,730 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 3.53 seconds.
+2026-09-04 23:15:57,659 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:15:57,674 | INFO     | [TRANSFORM] Standardized 'Last Restocked' to ISO format.Valid dates before: 800, after: 800.
+2026-09-04 23:15:57,682 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:15:57,683 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:15:57,719 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:15:57,734 | INFO     | [LOAD - SQLITE] Successfully inserted 834 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:16:01,330 | INFO     | [LOAD - MONGODB] Successfully inserted 834 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:16:01,332 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 3.71 seconds.
+2026-09-04 23:28:30,735 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:28:30,745 | INFO     | [TRANSFORM] Standardized 'Last Restocked' to ISO format.Valid dates before: 800, after: 800.
+2026-09-04 23:28:30,751 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:28:30,753 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:28:30,775 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:28:30,790 | INFO     | [LOAD - SQLITE] Successfully inserted 1,668 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:28:35,854 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:30:50,062 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:30:50,076 | INFO     | [TRANSFORM] Standardized 'Last Restocked' to ISO format.Valid dates before: 800, after: 800.
+2026-09-04 23:30:50,080 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:30:50,080 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:30:50,103 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:34:20,106 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:34:20,116 | INFO     | [TRANSFORM] Standardized 'Last Restocked' to ISO format.Valid dates before: 800, after: 800.
+2026-09-04 23:34:20,120 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:34:20,121 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:34:20,146 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:36:03,317 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:36:03,328 | INFO     | [TRANSFORM] Standardized 'Last Restocked' to ISO format.Valid dates before: 800, after: 800.
+2026-09-04 23:36:03,333 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:36:03,334 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:36:03,371 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:36:03,401 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:36:09,289 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:36:10,131 | INFO     | [LOAD - MONGODB] Verified 615 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-04 23:36:10,192 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 6.91 seconds.
+2026-09-04 23:47:26,817 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:47:26,820 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-04 23:47:26,824 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:47:26,825 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:47:26,850 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:47:26,861 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:47:32,104 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:48:31,389 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:48:31,395 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-04 23:48:31,402 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:48:31,408 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:48:31,452 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:48:31,474 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:48:37,163 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:48:38,088 | INFO     | [LOAD - MONGODB] Verified 615 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-04 23:48:38,145 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 6.79 seconds.
+2026-09-04 23:53:57,877 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:53:57,881 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-04 23:53:57,892 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:53:57,899 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:53:57,946 | INFO     | [TRANSFORM] Dropped 0 duplicate rows. Standardized dates and imputed missing customer values. Reshaped structures.
+2026-09-04 23:53:57,963 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:54:03,318 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:54:03,821 | INFO     | [LOAD - MONGODB] Verified 615 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-04 23:54:03,848 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 6.00 seconds.
+2026-09-04 23:56:50,305 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-04 23:56:50,309 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-04 23:56:50,319 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-04 23:56:50,323 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-04 23:56:50,348 | INFO     | [TRANSFORM] Dropped 166 duplicate rows. Standardized dates and cast numeric types. Reshaped structures.
+2026-09-04 23:56:50,368 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-04 23:56:55,745 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-04 23:56:56,481 | INFO     | [LOAD - MONGODB] Verified 615 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-04 23:56:56,543 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 6.26 seconds.
+2026-09-05 00:01:17,775 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-05 00:01:17,778 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-05 00:01:17,783 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-05 00:01:17,787 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-05 00:01:17,811 | INFO     | [TRANSFORM] Dropped 166 duplicate rows. Standardized dates and cast numeric types. Reshaped structures.
+2026-09-05 00:01:17,824 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-05 00:01:22,816 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-05 00:01:23,505 | INFO     | [LOAD - MONGODB] Verified 615 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-05 00:01:23,548 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 5.80 seconds.
+2026-09-05 00:07:48,735 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-05 00:07:48,738 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-05 00:07:48,743 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-05 00:07:48,746 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-05 00:07:48,768 | INFO     | [TRANSFORM] Dropped 166 duplicate rows. Standardized dates and cast numeric types. Reshaped structures.
+2026-09-05 00:07:48,780 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-05 00:07:54,011 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-05 00:07:54,840 | INFO     | [LOAD - MONGODB] Verified 615 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-05 00:07:54,899 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 6.19 seconds.
+2026-09-05 00:09:33,093 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-05 00:09:33,096 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-05 00:09:33,100 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-05 00:09:33,104 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-05 00:09:33,124 | INFO     | [TRANSFORM] Dropped 166 duplicate rows. Standardized dates and cast numeric types. Reshaped structures.
+2026-09-05 00:09:33,139 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-05 00:09:38,375 | INFO     | [LOAD - MONGODB] Successfully inserted 615 documents into collection 'warehouse_db.sales_documents'.
+2026-09-05 00:09:39,185 | INFO     | [LOAD - MONGODB] Verified 615 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-05 00:09:39,243 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 6.17 seconds.
+2026-09-05 00:16:54,012 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-05 00:16:54,016 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-05 00:16:54,020 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-05 00:16:54,023 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-05 00:16:54,025 | WARNING  | [TRANSFORM] Dropped 401 row(s) with missing or negative values in product_id, quantity, price, or last_restocked.
+2026-09-05 00:16:54,037 | INFO     | [TRANSFORM] Dropped 166 duplicate rows. Standardized dates and cast numeric types. Reshaped structures.
+2026-09-05 00:16:54,046 | INFO     | [LOAD - SQLITE] Successfully inserted 615 rowsinto SQLite table 'fact_sales'.
+2026-09-05 00:16:58,027 | INFO     | [LOAD - MONGODB] Successfully inserted 373 documents into collection 'warehouse_db.sales_documents'.
+2026-09-05 00:16:58,690 | INFO     | [LOAD - MONGODB] Verified 373 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-05 00:16:58,725 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 4.74 seconds.
+2026-09-05 00:17:21,397 | INFO     | [EXTRACT] Successfully read 1,000 raw rows from CSVand 0 objects from JSON.
+2026-09-05 00:17:21,401 | WARNING  | [TRANSFORM] No format configured for 'Last Restocked' in DATETIME_FORMATS — skipping standardization.
+2026-09-05 00:17:21,407 | INFO     | [TRANSFORM] Dropped 166 duplicate rows (subset=['Product ID', 'Warehouse']).
+2026-09-05 00:17:21,409 | INFO     | [TRANSFORM] Cast types: 136 unparseable Quantity value(s), 176 missing Price value(s) coerced to null (impute or drop downstream).
+2026-09-05 00:17:21,410 | WARNING  | [TRANSFORM] Dropped 401 row(s) with missing or negative values in product_id, quantity, price, or last_restocked.
+2026-09-05 00:17:21,424 | INFO     | [TRANSFORM] Dropped 166 duplicate rows. Standardized dates and cast numeric types. Reshaped structures.
+2026-09-05 00:17:21,433 | INFO     | [LOAD - SQLITE] Successfully inserted 373 rowsinto SQLite table 'fact_sales'.
+2026-09-05 00:17:25,404 | INFO     | [LOAD - MONGODB] Successfully inserted 373 documents into collection 'warehouse_db.sales_documents'.
+2026-09-05 00:17:25,960 | INFO     | [LOAD - MONGODB] Verified 373 documents in collection 'warehouse_db.sales_documents'. Proof written to lesson_4/data/MongoDB/mongodb_verification.json.
+2026-09-05 00:17:25,992 | INFO     | [COMPLETE] Multi-target pipeline execution finished successfully in 4.61 seconds.
