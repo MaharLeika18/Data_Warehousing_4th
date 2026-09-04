@@ -5,15 +5,16 @@ import os
 import json
 import sqlite3
 import pymongo
+from pymongo import MongoClient
 from pathlib import Path
 import logging
-import shutil
 from pathlib import Path
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 import time
 from dotenv import load_dotenv
-import re
+from pymongo import ReplaceOne
+from pymongo.errors import BulkWriteError
 
 @dataclass
 class PipelineConfig:
@@ -21,17 +22,20 @@ class PipelineConfig:
     CSV_GLOB_PATTERN: str
     JSON_GLOB_PATTERN:str
     PROCESSED_PATH: str
-    QUARANTINE_FILES_PATH: str  # not sure if we still need this
     SQLITE_OUTPUT_PATH: str
     SQLITE_OUTPUT_TABLE: str
+    SQLITE_UNIQUE_KEY_COLUMNS: list
     MONGO_URI: str
     MONGO_DB_NAME: str
     MONGO_COLLECTION_NAME: str
+    MONGO_PROOF_OUTPUT_PATH: str
+    MONGO_UNIQUE_KEY_FIELDS: list
     LOG_PATH: str
+    DATETIME_FORMATS: dict
 
 def get_config() -> PipelineConfig:
     load_dotenv()
-    mongo_uri = os.environ.get("MONGO_URI")
+    mongo_uri = os.environ.get("MONGODB_URI")
     if not mongo_uri:
         raise RuntimeError(
             "MONGO_URI is not set. Copy .env.example to .env and set your MongoDB connection string."
@@ -42,25 +46,31 @@ def get_config() -> PipelineConfig:
         CSV_GLOB_PATTERN = "*.csv",
         JSON_GLOB_PATTERN = "*.json",
         PROCESSED_PATH = "lesson_4/landing_zone/_processed",
-        QUARANTINE_FILES_PATH = "lesson_4/quarantine",
         SQLITE_OUTPUT_PATH = "lesson_4/data/SQLite",
         SQLITE_OUTPUT_TABLE = "fact_sales",
+        SQLITE_UNIQUE_KEY_COLUMNS = ["product_id"],
         MONGO_URI = mongo_uri,
         MONGO_DB_NAME = "warehouse_db",
         MONGO_COLLECTION_NAME = "sales_documents",
+        MONGO_PROOF_OUTPUT_PATH = "lesson_4/data/MongoDB/mongodb_verification.json",
+        MONGO_UNIQUE_KEY_FIELDS = ["product_id", "_source_file", "_source_line"],
         LOG_PATH= "lesson_4/logs",
+        DATETIME_FORMATS = {
+            "last_restocked": "%d/%m/%Y",
+        }
     )
 
 # ------ Logging ------
 def setup_logger(log_path: str, level: str = "info") -> logging.Logger:
-    Path(log_path).parent.mkdir(parents=True, exist_ok=True)
+    log_dir = Path(log_path)
+    log_dir.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger("pipeline")
     logger.setLevel(getattr(logging, level.upper(), logging.INFO))
     logger.handlers.clear()
 
-    file_fmt = logging.Formatter("%(asctime)s | %(levelname)-8s | %(message)s")     # not asked for but keeping the time logging for debugging
-    file_handler = logging.FileHandler(log_path)
+    file_fmt = logging.Formatter("%(asctime)s | %(levelname)-8s | %(message)s")    
+    file_handler = logging.FileHandler(log_dir / "pipeline_execution.log")
     file_handler.setFormatter(file_fmt)
     logger.addHandler(file_handler)
 
@@ -73,13 +83,6 @@ def setup_logger(log_path: str, level: str = "info") -> logging.Logger:
 def log_stage(logger: logging.Logger, stage: str, message: str, level: str = "info") -> None:
     log_fn = getattr(logger, level.lower(), logger.info)
     log_fn(f"[{stage}] {message}")
-
-# ------ Connect to DBs ------
-
-# SQLite
-
-
-# MongoDB
 
 
 # ------ Extract ------
@@ -122,7 +125,7 @@ def read_csv_file(
         return None
 
 def read_json_file(
-    file_path: Path, cfg: PipelineConfig, logger: logging.Logger
+    file_path: Path, logger: logging.Logger
 ) -> list[dict] | None:
 
     try:
@@ -165,6 +168,69 @@ def read_json_file(
 
     return records
 
+def ensure_sqlite_table(cfg: PipelineConfig, logger: logging.Logger) -> None:
+    db_file = Path(cfg.SQLITE_OUTPUT_PATH) / "retail_warehouse.db"
+    db_file.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_file)
+    try:
+        cursor = conn.cursor()
+
+        # Match the table to the columns produced by reshape_data.
+        cursor.execute(f"""
+            CREATE TABLE IF NOT EXISTS {cfg.SQLITE_OUTPUT_TABLE} (
+                product_id TEXT,
+                product_name TEXT,
+                category TEXT,
+                warehouse_id TEXT,
+                location TEXT,
+                quantity INTEGER,
+                price REAL,
+                supplier TEXT,
+                status TEXT,
+                last_restocked TEXT,
+                _source_file TEXT,
+                UNIQUE({", ".join(cfg.SQLITE_UNIQUE_KEY_COLUMNS)})
+            )
+        """)
+
+        required_columns = {
+            "product_id": "TEXT",
+            "product_name": "TEXT",
+            "category": "TEXT",
+            "warehouse_id": "TEXT",
+            "location": "TEXT",
+            "quantity": "INTEGER",
+            "price": "REAL",
+            "supplier": "TEXT",
+            "status": "TEXT",
+            "last_restocked": "TEXT",
+            "_source_file": "TEXT",
+        }
+        existing_columns = {
+            row[1]
+            for row in cursor.execute(
+                f"PRAGMA table_info({cfg.SQLITE_OUTPUT_TABLE})"
+            )
+        }
+        for column, data_type in required_columns.items():
+            if column not in existing_columns:
+                cursor.execute(
+                    f"ALTER TABLE {cfg.SQLITE_OUTPUT_TABLE} "
+                    f"ADD COLUMN {column} {data_type}"
+                )
+        conn.commit()
+    finally:
+        conn.close()
+
+def ensure_mongo_index(cfg: PipelineConfig, logger: logging.Logger) -> None:
+    client = MongoClient(cfg.MONGO_URI)
+    try:
+        collection = client[cfg.MONGO_DB_NAME][cfg.MONGO_COLLECTION_NAME]
+        index_spec = [(field, 1) for field in cfg.MONGO_UNIQUE_KEY_FIELDS]
+        collection.create_index(index_spec, unique=True, name="uniq_doc_key")
+    finally:
+        client.close()
+
 # ingest into pd dataframe
 def fetch_source_batches(cfg: PipelineConfig, logger: logging.Logger):
     logger = setup_logger(cfg.LOG_PATH)
@@ -178,7 +244,7 @@ def fetch_source_batches(cfg: PipelineConfig, logger: logging.Logger):
 
     json_records: list[dict] = []
     for path in files["json"]:
-        records = read_json_file(path, cfg, logger)
+        records = read_json_file(path, logger)
         if records:
             json_records.extend(records)
     log_stage(
@@ -232,9 +298,8 @@ def _parse_quantity(value) -> float | None:
     total += current
     return float(total)
 
-
 # handle missing IDs
-def handle_missing_ids(df: pd.DataFrame, id_column: str, logger: logging.Logger) -> pd.DataFrame:
+def handle_missing_ids(df: pd.DataFrame, id_column: str, logger: logging.Logger) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Splits rows to clean or quarantine based on missing IDs."""
     missing_mask = df[id_column].isna()
     quarantined = df[missing_mask].copy()
@@ -246,32 +311,48 @@ def handle_missing_ids(df: pd.DataFrame, id_column: str, logger: logging.Logger)
     return clean, quarantined
 
 # standardize date format to ISO standards
-def standardize_dates(df: pd.DataFrame, date_column: str, logger: logging.Logger) -> pd.DataFrame:
-    """Standardize date formats to ISO YYYY-MM-DD."""
+def standardize_dates(
+    df: pd.DataFrame, date_column: str, cfg: PipelineConfig, logger: logging.Logger
+) -> pd.DataFrame:
+    fmt = cfg.DATETIME_FORMATS.get(date_column)
+    if not fmt:
+        logger.warning(
+            f"[TRANSFORM] No format configured for '{date_column}' in "
+            f"DATETIME_FORMATS — skipping standardization."
+        )
+        return df
+
     def parse_one(value):
         if pd.isna(value):
             return None
-        for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%m/%d/%Y", "%d-%b-%Y"):
-            try:
-                return datetime.strptime(value, fmt).strftime("%Y-%m-%d")
-            except (ValueError, TypeError):
-                continue
-        return None
+        try:
+            return datetime.strptime(str(value).strip(), fmt).strftime("%Y-%m-%d")
+        except (ValueError, TypeError):
+            return None
 
     df = df.copy()
     before_valid = df[date_column].notna().sum()
     df[date_column] = df[date_column].apply(parse_one)
     after_valid = df[date_column].notna().sum()
 
+    newly_invalid = before_valid - after_valid
+
     log_stage(
         logger, "TRANSFORM",
-        f"Standardized '{date_column}' to ISO format."
+        f"Standardized '{date_column}' to ISO format using pattern '{fmt}'. "
         f"Valid dates before: {before_valid:,}, after: {after_valid:,}."
     )
+
+    if newly_invalid > 0:
+        logger.warning(
+            f"[TRANSFORM] {newly_invalid:,} value(s) in '{date_column}' "
+            f"did not match format '{fmt}' and were set to None."
+        )
+
     return df
 
 # drop exact duplicate rows
-def drop_duplicate_rows(df: pd.DataFrame, subset: list[str] | None, logger: logging.Logger) -> pd.DataFrame:
+def drop_duplicate_rows(df: pd.DataFrame, subset: list[str] | None, logger: logging.Logger) -> tuple[pd.DataFrame, int]:
     """Drops duplicates."""
     before = len(df)
     df = df.drop_duplicates(subset=subset)
@@ -300,36 +381,41 @@ def cast_data_types(df: pd.DataFrame, logger: logging.Logger) -> pd.DataFrame:
     return df
 
 
+def drop_invalid_inventory_rows(df: pd.DataFrame, logger: logging.Logger) -> pd.DataFrame:
+    """Drop rows missing or containing negative required inventory values."""
+    required = ["Product ID", "Quantity", "Price", "Last Restocked"]
+    invalid = df[required].isna().any(axis=1)
+    invalid |= pd.to_numeric(df["Product ID"], errors="coerce").lt(0).fillna(False)
+    invalid |= pd.to_numeric(df["Quantity"], errors="coerce").lt(0).fillna(False)
+    invalid |= pd.to_numeric(df["Price"], errors="coerce").lt(0).fillna(False)
+
+    dropped = int(invalid.sum())
+    if dropped:
+        log_stage(
+            logger,
+            "TRANSFORM",
+            f"Dropped {dropped:,} row(s) with missing or negative values in "
+            "product_id, quantity, price, or last_restocked.",
+            level="warning",
+        )
+    return df.loc[~invalid].copy()
+
+
 # reshape tabular data into relational structure for sqlite and nested docs for mongodb
 def reshape_data(cfg: PipelineConfig, raw_df: pd.DataFrame, logger: logging.Logger):
     clean, quarantined = handle_missing_ids(raw_df, id_column="Product ID", logger=logger)
-    clean = standardize_dates(clean, date_column="Last Restocked", logger=logger)
+    clean = standardize_dates(clean, date_column="Last Restocked", cfg=cfg, logger=logger)
     clean, dropped_count = drop_duplicate_rows(clean, subset=["Product ID", "Warehouse"], logger=logger)
     clean = cast_data_types(clean, logger=logger)
-
-    def parse_date(value):
-        if pd.isna(value):
-            return None
-        try:
-            return datetime.strptime(str(value).strip(), "%d-%m-%Y").strftime("%Y-%m-%d")
-        except ValueError:
-            return None
-    clean["Last Restocked"] = clean["Last Restocked"].apply(parse_date)
-
-    before = len(clean)
-    clean = clean.drop_duplicates(subset=["Product ID", "Warehouse"])
-    dropped_count = before - len(clean)
+    clean = drop_invalid_inventory_rows(clean, logger=logger)
 
     clean["Product Name"] = clean["Product Name"].astype(str).str.strip().str.lower()
-    clean["Quantity"] = clean["Quantity"].apply(_parse_quantity)
-    clean["Price"] = pd.to_numeric(clean["Price"], errors="coerce")
 
-    fact_inventory = clean.rename(columns={ # one consistent name
-
-        "Product ID" : "Product_id", "Product Name" : "product_name",
-        "Category" : "category", "Warehouse" : "warehouse_id",
-        "Location" : "location", "Quantity" : "quantity", "Price" : "price",
-        "Supplier" : "supplier", "Status" : "status", "Last Restocked" : "last_restocked",
+    fact_inventory = clean.rename(columns={
+        "Product ID": "product_id", "Product Name": "product_name",
+        "Category": "category", "Warehouse": "warehouse_id",
+        "Location": "location", "Quantity": "quantity", "Price": "price",
+        "Supplier": "supplier", "Status": "status", "Last Restocked": "last_restocked",
     })
 
     dim_warehouse = pd.DataFrame({"warehouse_id": fact_inventory["warehouse_id"].unique()})
@@ -337,7 +423,7 @@ def reshape_data(cfg: PipelineConfig, raw_df: pd.DataFrame, logger: logging.Logg
 
     documents = [
         {
-            "product_id": row["product_ID"],
+            "product_id": row["product_id"],
             "product_name": row["product_name"],
             "category": row["category"],
             "warehouse": {
@@ -347,35 +433,107 @@ def reshape_data(cfg: PipelineConfig, raw_df: pd.DataFrame, logger: logging.Logg
                 "status": row["status"],
             },
             "price": row["price"],
-            "date": row["last_restocked"],
             "last_restocked": row["last_restocked"],
         }
         for _, row in fact_inventory.iterrows()
     ]
 
-
     log_stage(
         logger, "TRANSFORM",
         f"Dropped {dropped_count:,} duplicate rows. Standardized dates and "
-        f"imputed missing customer values. Reshaped structures."
+        f"cast numeric types. Reshaped structures."
     )
 
     return fact_inventory, dim_warehouse, documents, quarantined
 
+# ------ Verify ------
+def verify_mongo_insertion(cfg: PipelineConfig, logger: logging.Logger, expected_count: int | None = None) -> dict:
+    client = MongoClient(cfg.MONGO_URI)
+    try:
+        db = client[cfg.MONGO_DB_NAME]
+        collection = db[cfg.MONGO_COLLECTION_NAME]
 
+        actual_count = collection.count_documents({})
+        samples = list(collection.find().limit(5))
+
+        field_types: dict[str, set] = {}
+        for doc in samples:
+            for key, value in doc.items():
+                field_types.setdefault(key, set()).add(type(value).__name__)
+
+        field_type_summary = {k: sorted(v) for k, v in field_types.items()}
+
+        def _serialize(value):
+            """Recursively convert Mongo values to strict-JSON-safe values."""
+            if isinstance(value, dict):
+                return {key: _serialize(item) for key, item in value.items()}
+            if isinstance(value, (list, tuple)):
+                return [_serialize(item) for item in value]
+            if isinstance(value, (float, np.floating)) and not np.isfinite(value):
+                return None
+            if isinstance(value, np.generic):
+                return value.item()
+            if value.__class__.__name__ == "ObjectId":
+                return str(value)
+            return value
+
+        report = {
+            "verified_at_utc": datetime.now(timezone.utc).isoformat(),
+            "database": cfg.MONGO_DB_NAME,
+            "collection": cfg.MONGO_COLLECTION_NAME,
+            "document_count": actual_count,
+            "expected_count": expected_count,
+            "count_matches_expected": (
+                actual_count == expected_count if expected_count is not None else None
+            ),
+            "field_type_summary": field_type_summary,
+            "sample_documents": [_serialize(d) for d in samples],
+        }
+
+        output_path = Path(cfg.MONGO_PROOF_OUTPUT_PATH)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(report, indent=2, default=str, allow_nan=False))
+
+        log_stage(
+            logger, "LOAD - MONGODB",
+            f"Verified {actual_count:,} documents in collection "
+            f"'{cfg.MONGO_DB_NAME}.{cfg.MONGO_COLLECTION_NAME}'. "
+            f"Proof written to {output_path}."
+        )
+
+        if expected_count is not None and actual_count != expected_count:
+            logger.warning(
+                f"[LOAD - MONGODB] Count mismatch: expected {expected_count:,}, "
+                f"found {actual_count:,} in collection."
+            )
+
+        return report
+
+    finally:
+        client.close()
 
 
 # ------ Load ------
 # insert structured rows into sqlite tables
-def load_sqlite(cfg: PipelineConfig, fact_df: pd.DataFrame, dim_df: pd.DataFrame, logger: logging.Logger) -> int:
+def load_sqlite(cfg: PipelineConfig, fact_df: pd.DataFrame, dim_df: pd.DataFrame, logger: logging.Logger) -> None:
     output_dir = Path(cfg.SQLITE_OUTPUT_PATH)
     output_dir.mkdir(parents=True, exist_ok=True)
-    db_file = output_dir / "warehouse.db"
+    db_file = output_dir / "retail_warehouse.db"
 
+    ensure_sqlite_table(cfg, logger)
     conn = sqlite3.connect(db_file)
     try:
         dim_df.to_sql("dim_warehouse", conn, if_exists="replace", index=False)
-        fact_df.to_sql(cfg.SQLITE_OUTPUT_TABLE, conn, if_exists="replace", index=False)
+
+        columns = list(fact_df.columns)
+        column_sql = ", ".join(columns)
+        placeholders = ", ".join("?" for _ in columns)
+        rows = fact_df.where(pd.notna(fact_df), None).itertuples(index=False, name=None)
+        conn.executemany(
+            f"INSERT OR IGNORE INTO {cfg.SQLITE_OUTPUT_TABLE} "
+            f"({column_sql}) VALUES ({placeholders})",
+            rows,
+        )
         conn.commit()
 
         sqlite_row_count = conn.execute(
@@ -396,6 +554,7 @@ def load_sqlite(cfg: PipelineConfig, fact_df: pd.DataFrame, dim_df: pd.DataFrame
 # push nested docs into mongodb collections
 def load_mongodb(cfg: PipelineConfig, documents: list[dict], logger: logging.Logger) -> int:
     logger = setup_logger(cfg.LOG_PATH)
+    ensure_mongo_index(cfg, logger)
 
     client = pymongo.MongoClient(cfg.MONGO_URI)
     try:
@@ -405,13 +564,22 @@ def load_mongodb(cfg: PipelineConfig, documents: list[dict], logger: logging.Log
         collection.delete_many({})  # clear existing documents
         
         if documents:
-            collection.insert_many(documents)
+            operations = [
+                ReplaceOne(
+                    {field: document.get(field) for field in cfg.MONGO_UNIQUE_KEY_FIELDS},
+                    document,
+                    upsert=True,
+                )
+                for document in documents
+            ]
+            collection.bulk_write(operations, ordered=False)
 
         mongo_doc_count = collection.count_documents({})
     finally:
         client.close()
 
     log_stage(logger, "LOAD - MONGODB", f"Successfully inserted {mongo_doc_count:,} documents into collection '{cfg.MONGO_DB_NAME}.{cfg.MONGO_COLLECTION_NAME}'.")
+    verify_mongo_insertion(cfg, logger, expected_count=mongo_doc_count)
 
     return mongo_doc_count
 
@@ -425,11 +593,6 @@ def run_pipeline() -> dict:
     raw_csv , json_records = fetch_source_batches(cfg, logger)
     fact_df, dim_df, documents, quarantined = reshape_data(cfg, raw_csv, logger)
 
-    if len(quarantined):
-        quarantine_dir = Path(cfg.QUARANTINE_FILES_PATH)
-        quarantine_dir.mkdir(parents=True, exist_ok=True)
-        quarantined.to_csv(quarantine_dir / "quarantined_rows.csv", index=False)
-
     sqlite_row_count = load_sqlite(cfg, fact_df, dim_df, logger)
     mongo_doc_count = load_mongodb(cfg, documents, logger)
 
@@ -439,7 +602,6 @@ def run_pipeline() -> dict:
     return {
         "raw_rows": len(raw_csv),
         "json_objects": len(json_records),
-        "quarantined_rows": len(quarantined),
         "sqlite_rows_loaded": sqlite_row_count,
         "mongo_docs_loaded": mongo_doc_count,
         "elapsed_seconds": round(elapsed, 2),
