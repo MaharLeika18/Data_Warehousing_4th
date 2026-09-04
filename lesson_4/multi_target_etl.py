@@ -12,6 +12,7 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import time
+from dotenv import load_dotenv
 
 @dataclass
 class PipelineConfig:
@@ -28,6 +29,13 @@ class PipelineConfig:
     LOG_PATH: str
 
 def get_config() -> PipelineConfig:
+    load_dotenv()
+    mongo_uri = os.environ.get("MONGO_URI")
+    if not mongo_uri:
+        raise RuntimeError(
+            "MONGO_URI is not set. Copy .env.example to .env and set your MongoDB connection string."
+        )
+    
     return PipelineConfig(
         LANDING_ZONE_PATH = "lesson_4/landing_zone",
         CSV_GLOB_PATTERN = "*.csv",
@@ -36,7 +44,7 @@ def get_config() -> PipelineConfig:
         QUARANTINE_FILES_PATH = "lesson_4/quarantine",
         SQLITE_OUTPUT_PATH = "lesson_4/data/SQLite",
         SQLITE_OUTPUT_TABLE = "fact_sales",
-        MONGO_URI = "mongodb+srv://louezethesaldua_db_user:c755vmW2I5vIjfOi@lesson4.ewe9gss.mongodb.net",
+        MONGO_URI = mongo_uri,
         MONGO_DB_NAME = "warehouse_db",
         MONGO_COLLECTION_NAME = "sales_documents",
         LOG_PATH= "lesson_4/logs",
