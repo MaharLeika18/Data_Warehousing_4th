@@ -598,12 +598,10 @@ def load_clickstream_to_mongo(
 
     log_stage(logger, stage, f"Starting load of {source_file} into '{collection_name}'")
 
-    client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000, socketTimeoutMS=20000)
+    client = MongoClient(mongo_uri)
     collection = client[db_name][collection_name]
-    log_stage(logger, stage, "Creating unique index...")
     collection.create_index([(col, 1) for col in unique_key_columns], unique=True, name="uniq_studentvle_event")
-    log_stage(logger, stage, "Index created")
-    
+
     rows_read = 0
     rows_valid = 0
     total_inserted = 0
