@@ -1,0 +1,337 @@
+{
+  "generated_at": "2026-09-28T15:47:12.037604+00:00",
+  "database": "VLE_Logs",
+  "collection": "clickstream_events",
+  "load_stats": {
+    "rows_read": 10655280,
+    "rows_valid": 9868118,
+    "rows_deduped": 8459320,
+    "inserted": 1960496,
+    "skipped_duplicates": 1408798
+  },
+  "documents_in_mongodb": 1960496,
+  "indexes": [
+    "_id_"
+  ],
+  "sample_documents": [
+    {
+      "id_site": 877011,
+      "d": [
+        204,
+        209,
+        218
+      ],
+      "n": [
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "id_site": 877012,
+      "d": [
+        0,
+        5,
+        10,
+        11,
+        13,
+        14,
+        19,
+        22,
+        28,
+        29,
+        30,
+        34,
+        35,
+        36,
+        38,
+        41,
+        43,
+        49,
+        50,
+        52,
+        53,
+        54,
+        55,
+        56,
+        60,
+        61,
+        62,
+        63,
+        64,
+        67,
+        68,
+        69,
+        71,
+        72,
+        73,
+        75,
+        76,
+        80,
+        87,
+        91,
+        100,
+        103,
+        106,
+        107,
+        108,
+        112,
+        113,
+        114,
+        116,
+        117,
+        119,
+        127,
+        130,
+        131,
+        133,
+        137,
+        139,
+        156,
+        157,
+        161,
+        198,
+        203,
+        204,
+        205,
+        214,
+        219,
+        227,
+        231
+      ],
+      "n": [
+        13,
+        9,
+        2,
+        6,
+        3,
+        3,
+        1,
+        3,
+        1,
+        2,
+        1,
+        4,
+        1,
+        1,
+        4,
+        1,
+        2,
+        1,
+        5,
+        5,
+        2,
+        1,
+        1,
+        3,
+        1,
+        2,
+        1,
+        4,
+        3,
+        1,
+        1,
+        1,
+        2,
+        1,
+        3,
+        1,
+        1,
+        2,
+        1,
+        1,
+        4,
+        1,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        1,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        5,
+        3,
+        3,
+        1,
+        6,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id_site": 877015,
+      "d": [
+        50,
+        63,
+        80,
+        108,
+        137,
+        231
+      ],
+      "n": [
+        1,
+        4,
+        3,
+        1,
+        3,
+        2
+      ]
+    }
+  ],
+  "clicks_by_activity_type": [
+    {
+      "_id": "oucontent",
+      "clicks": 9657091,
+      "events": 1671025
+    },
+    {
+      "_id": "homepage",
+      "clicks": 6949064,
+      "events": 1735226
+    },
+    {
+      "_id": "forumng",
+      "clicks": 3862674,
+      "events": 1266574
+    },
+    {
+      "_id": "subpage",
+      "clicks": 3411582,
+      "events": 1949898
+    },
+    {
+      "_id": "quiz",
+      "clicks": 1791524,
+      "events": 298358
+    },
+    {
+      "_id": "resource",
+      "clicks": 1047359,
+      "events": 785691
+    },
+    {
+      "_id": "url",
+      "clicks": 566702,
+      "events": 407716
+    },
+    {
+      "_id": "ouwiki",
+      "clicks": 487510,
+      "events": 110877
+    },
+    {
+      "_id": "glossary",
+      "clicks": 87763,
+      "events": 17355
+    },
+    {
+      "_id": "oucollaborate",
+      "clicks": 86995,
+      "events": 53088
+    },
+    {
+      "_id": "externalquiz",
+      "clicks": 64292,
+      "events": 50910
+    },
+    {
+      "_id": "page",
+      "clicks": 63631,
+      "events": 47549
+    },
+    {
+      "_id": "questionnaire",
+      "clicks": 31478,
+      "events": 21487
+    },
+    {
+      "_id": "ouelluminate",
+      "clicks": 23670,
+      "events": 14781
+    },
+    {
+      "_id": "dataplus",
+      "clicks": 22177,
+      "events": 6965
+    },
+    {
+      "_id": "dualpane",
+      "clicks": 20716,
+      "events": 10153
+    },
+    {
+      "_id": "htmlactivity",
+      "clicks": 9239,
+      "events": 6835
+    },
+    {
+      "_id": "folder",
+      "clicks": 5420,
+      "events": 4678
+    },
+    {
+      "_id": "sharedsubpage",
+      "clicks": 171,
+      "events": 148
+    },
+    {
+      "_id": "repeatactivity",
+      "clicks": 9,
+      "events": 6
+    }
+  ],
+  "facet_summary": [
+    {
+      "totals": [
+        {
+          "buckets": 1960496,
+          "total_clicks": 28189067,
+          "click_events": 8459320
+        }
+      ],
+      "distinct_students": [
+        {
+          "n": 26074
+        }
+      ],
+      "top_sites": [
+        {
+          "_id": 716238,
+          "clicks": 718737
+        },
+        {
+          "_id": 882537,
+          "clicks": 716869
+        },
+        {
+          "_id": 526721,
+          "clicks": 586632
+        },
+        {
+          "_id": 673519,
+          "clicks": 455896
+        },
+        {
+          "_id": 909013,
+          "clicks": 442887
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "document count matches inserted rows": true,
+    "_id_ index exists": true
+  }
+}

@@ -1,0 +1,107 @@
+2026-09-29 01:37:45,960 | INFO     | [Initialization] OLAP Analysis Pipeline started
+2026-09-29 01:37:45,960 | INFO     | [Initialization] Output file: logs/olap_output.txt
+2026-09-29 01:37:45,960 | INFO     | [Initialization] Facets JSON: data/olap_facets.json
+2026-09-29 01:38:30,294 | INFO     | [OLAP] Exported 1960496 bucket metrics to agg_bucket_engagement
+2026-09-29 01:38:30,328 | INFO     | [OLAP] Ensured views exist
+2026-09-29 01:38:42,900 | INFO     | [JSON Export] Writing facets results to data/olap_facets.json
+2026-09-29 01:38:42,903 | INFO     | [JSON Export] Successfully wrote facets data to data/olap_facets.json
+2026-09-29 01:38:42,949 | INFO     | [OLAP Analysis] Starting OLAP analysis pipeline
+2026-09-29 01:38:42,949 | INFO     | [OLAP Analysis] Connecting to database: data/SQLite/warehouse.db
+2026-09-29 01:38:42,949 | INFO     | [OLAP Analysis] Processing query: student_progress_timeline
+2026-09-29 01:38:42,949 | INFO     | [Query: student_progress_timeline] Executing OLAP query
+2026-09-29 01:38:44,024 | INFO     | [Query: student_progress_timeline] Query completed successfully - 50 rows returned
+2026-09-29 01:38:44,058 | INFO     | [OLAP Analysis] Sample results for student_progress_timeline:
+id_student      | code_module     | code_presentation | assessment_sequence | assessment_due_date | date_submitted  | score           | previous_score  | score_change    | cumulative_score | cumulative_weight | running_average | assessments_completed | days_between_submissions
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6516            | AAA             | 2014J           | 1               | 19              | 17              | 60.0            | None            | 0.0             | 60.0            | 10.0            | 60.0            | 1               | None           
+6516            | AAA             | 2014J           | 2               | 54              | 51              | 48.0            | 60.0            | -12.0           | 108.0           | 30.0            | 54.0            | 2               | 34             
+6516            | AAA             | 2014J           | 3               | 117             | 116             | 63.0            | 48.0            | 15.0            | 171.0           | 50.0            | 57.0            | 3               | 65             
+6516            | AAA             | 2014J           | 4               | 166             | 164             | 61.0            | 63.0            | -2.0            | 232.0           | 70.0            | 58.0            | 4               | 48             
+6516            | AAA             | 2014J           | 5               | 215             | 210             | 77.0            | 61.0            | 16.0            | 309.0           | 100.0           | 61.8            | 5               | 46             
+... (45 more rows)
+2026-09-29 01:38:44,058 | INFO     | [OLAP Analysis] Processing query: course_performance_summary
+2026-09-29 01:38:44,058 | INFO     | [Query: course_performance_summary] Executing OLAP query
+2026-09-29 01:38:44,762 | INFO     | [Query: course_performance_summary] Query completed successfully - 30 rows returned
+2026-09-29 01:38:44,768 | INFO     | [OLAP Analysis] Sample results for course_performance_summary:
+code_module     | code_presentation | id_student      | final_result    | total_assessments | avg_score       | total_score     | max_score       | min_score       | score_stddev    | class_rank      | total_students_in_course | percentile_rank
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AAA             | 2013J           | 2458355         | Pass            | 5               | 90.6            | 453.0           | 95.0            | 86.0            | 3.2             | 1               | 383             | 0.26           
+AAA             | 2013J           | 187100          | Distinction     | 5               | 89.2            | 446.0           | 90.0            | 88.0            | 0.98            | 2               | 383             | 0.52           
+AAA             | 2013J           | 312537          | Distinction     | 5               | 87.8            | 439.0           | 90.0            | 85.0            | 1.6             | 3               | 383             | 0.78           
+AAA             | 2013J           | 444677          | Distinction     | 5               | 87.6            | 438.0           | 91.0            | 84.0            | 2.65            | 4               | 383             | 1.04           
+AAA             | 2013J           | 376439          | Distinction     | 5               | 87.0            | 435.0           | 94.0            | 77.0            | 5.62            | 5               | 383             | 1.31           
+... (25 more rows)
+2026-09-29 01:38:44,768 | INFO     | [OLAP Analysis] Processing query: assessment_submission_patterns
+2026-09-29 01:38:44,768 | INFO     | [Query: assessment_submission_patterns] Executing OLAP query
+2026-09-29 01:38:45,327 | INFO     | [Query: assessment_submission_patterns] Query completed successfully - 40 rows returned
+2026-09-29 01:38:45,330 | INFO     | [OLAP Analysis] Sample results for assessment_submission_patterns:
+code_module     | code_presentation | id_assessment   | assessment_type | due_date        | weight          | submission_status | days_late       | score           | avg_assessment_score | total_submissions | submission_order | submission_percentile
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AAA             | 2013J           | 1752            | TMA             | 19              | 10.0            | on_time         | -12             | 81.0            | 70.3072625698324 | 359             | 1               | 0.28           
+AAA             | 2013J           | 1752            | TMA             | 19              | 10.0            | on_time         | -10             | 71.0            | 70.3072625698324 | 359             | 2               | 0.56           
+AAA             | 2013J           | 1752            | TMA             | 19              | 10.0            | on_time         | -10             | 75.0            | 70.3072625698324 | 359             | 3               | 0.84           
+AAA             | 2013J           | 1752            | TMA             | 19              | 10.0            | on_time         | -9              | 80.0            | 70.3072625698324 | 359             | 4               | 1.11           
+AAA             | 2013J           | 1752            | TMA             | 19              | 10.0            | on_time         | -9              | 82.0            | 70.3072625698324 | 359             | 5               | 1.39           
+... (35 more rows)
+2026-09-29 01:38:45,330 | INFO     | [OLAP Analysis] Processing query: student_trajectory_analysis
+2026-09-29 01:38:45,331 | INFO     | [Query: student_trajectory_analysis] Executing OLAP query
+2026-09-29 01:38:46,718 | INFO     | [Query: student_trajectory_analysis] Query completed successfully - 30 rows returned
+2026-09-29 01:38:46,723 | INFO     | [OLAP Analysis] Sample results for student_trajectory_analysis:
+id_student      | code_module     | code_presentation | final_result    | num_of_prev_attempts | studied_credits | assessment_count | overall_avg_score | time_order      | assessment_date | score           | first_score     | last_score      | score_improvement | running_avg     | trajectory_trend
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6516            | AAA             | 2014J           | Pass            | 0               | 60              | 5               | 61.8            | 1               | 19              | 60.0            | 60.0            | 77.0            | 0.0             | 60.0            | improving      
+6516            | AAA             | 2014J           | Pass            | 0               | 60              | 5               | 61.8            | 2               | 54              | 48.0            | 60.0            | 77.0            | -12.0           | 54.0            | improving      
+6516            | AAA             | 2014J           | Pass            | 0               | 60              | 5               | 61.8            | 3               | 117             | 63.0            | 60.0            | 77.0            | 3.0             | 57.0            | improving      
+6516            | AAA             | 2014J           | Pass            | 0               | 60              | 5               | 61.8            | 4               | 166             | 61.0            | 60.0            | 77.0            | 1.0             | 58.0            | improving      
+6516            | AAA             | 2014J           | Pass            | 0               | 60              | 5               | 61.8            | 5               | 215             | 77.0            | 60.0            | 77.0            | 17.0            | 61.8            | improving      
+... (25 more rows)
+2026-09-29 01:38:46,723 | INFO     | [OLAP Analysis] Processing query: time_based_engagement
+2026-09-29 01:38:46,723 | INFO     | [Query: time_based_engagement] Executing OLAP query
+2026-09-29 01:38:47,755 | INFO     | [Query: time_based_engagement] Query completed successfully - 40 rows returned
+2026-09-29 01:38:47,760 | INFO     | [OLAP Analysis] Sample results for time_based_engagement:
+id_student      | code_module     | code_presentation | submission_week | engagement_sequence | score           | rolling_4week_avg | total_engagements | all_time_min    | all_time_max    | performance_percentile
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6516            | AAA             | 2014J           | 2               | 1               | 60.0            | 60.0            | 1               | 48.0            | 77.0            | 41.38          
+6516            | AAA             | 2014J           | 7               | 2               | 48.0            | 54.0            | 2               | 48.0            | 77.0            | 0.0            
+6516            | AAA             | 2014J           | 16              | 3               | 63.0            | 57.0            | 3               | 48.0            | 77.0            | 51.72          
+6516            | AAA             | 2014J           | 23              | 4               | 61.0            | 58.0            | 4               | 48.0            | 77.0            | 44.83          
+6516            | AAA             | 2014J           | 30              | 5               | 77.0            | 62.25           | 5               | 48.0            | 77.0            | 100.0          
+... (35 more rows)
+2026-09-29 01:38:47,760 | INFO     | [OLAP Analysis] Processing query: retention_by_early_engagement
+2026-09-29 01:38:47,760 | INFO     | [Query: retention_by_early_engagement] Executing OLAP query
+2026-09-29 01:38:49,438 | INFO     | [Query: retention_by_early_engagement] Query completed successfully - 88 rows returned
+2026-09-29 01:38:49,441 | INFO     | [OLAP Analysis] Sample results for retention_by_early_engagement:
+code_module     | code_presentation | early_quartile  | students        | retention_pct   | pass_pct       
+-----------------------------------------------------------------------------------------------------------
+AAA             | 2013J           | 1               | 96              | 80.2            | 53.1           
+AAA             | 2013J           | 2               | 96              | 84.4            | 74.0           
+AAA             | 2013J           | 3               | 96              | 87.5            | 81.3           
+AAA             | 2013J           | 4               | 95              | 85.3            | 82.1           
+AAA             | 2014J           | 1               | 92              | 70.7            | 48.9           
+... (83 more rows)
+2026-09-29 01:38:49,441 | INFO     | [OLAP Analysis] Processing query: learning_path_lift
+2026-09-29 01:38:49,441 | INFO     | [Query: learning_path_lift] Executing OLAP query
+2026-09-29 01:38:51,421 | INFO     | [Query: learning_path_lift] Query completed successfully - 16 rows returned
+2026-09-29 01:38:51,427 | INFO     | [OLAP Analysis] Sample results for learning_path_lift:
+activity_type   | students_engaged | pass_pct_engaged | lift_vs_baseline
+------------------------------------------------------------------------
+questionnaire   | 797             | 82.2            | 35.0           
+dualpane        | 1075            | 77.8            | 30.6           
+glossary        | 3704            | 65.3            | 18.1           
+oucollaborate   | 7239            | 62.8            | 15.6           
+ouwiki          | 7515            | 61.0            | 13.8           
+... (11 more rows)
+2026-09-29 01:38:51,427 | INFO     | [OLAP Analysis] Completed 7 OLAP analysis queries
+2026-09-29 01:38:51,427 | INFO     | [OLAP Analysis] Database connection closed
+2026-09-29 01:38:51,427 | INFO     | [Summary] Generating analysis summary
+2026-09-29 01:38:51,427 | INFO     | [Summary] Total queries executed: 7
+2026-09-29 01:38:51,427 | INFO     | [Summary] Successful queries: 7
+2026-09-29 01:38:51,428 | INFO     | [Summary] Total rows analyzed: 294
+2026-09-29 01:38:51,428 | INFO     | [Summary] student_progress_timeline: 50 rows
+2026-09-29 01:38:51,428 | INFO     | [Summary] course_performance_summary: 30 rows
+2026-09-29 01:38:51,428 | INFO     | [Summary] assessment_submission_patterns: 40 rows
+2026-09-29 01:38:51,428 | INFO     | [Summary] student_trajectory_analysis: 30 rows
+2026-09-29 01:38:51,428 | INFO     | [Summary] time_based_engagement: 40 rows
+2026-09-29 01:38:51,428 | INFO     | [Summary] retention_by_early_engagement: 88 rows
+2026-09-29 01:38:51,428 | INFO     | [Summary] learning_path_lift: 16 rows
+2026-09-29 01:38:51,428 | INFO     | [COMPLETE] OLAP analysis completed successfully in 65.47 seconds

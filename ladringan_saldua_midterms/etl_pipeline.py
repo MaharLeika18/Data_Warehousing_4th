@@ -462,33 +462,55 @@ def verify_sqlite(sqlite_db_path: str, expected: dict[str, int], tables: list[Ta
         raise RuntimeError(f"SQLite verification failed: {', '.join(problems)}")
     log_stage(logger, stage, "All SQLite checks PASSED")
 
+SITE_EXPR = {"$mod": ["$_id", 10_000_000]}
+STUDENT_EXPR = {"$floor": {"$divide": ["$_id", 10_000_000]}}
 
-def run_mongo_queries(coll, logger: logging.Logger) -> dict:
-    """Two example analytics queries on the clickstream collection (results go in the proof file)."""
+def run_mongo_queries(coll, logger, sqlite_db_path: str) -> dict:
     stage = "Verify MongoDB"
     results = {}
 
-    # Query 1: total clicks per activity type ($group + $sort)
-    results["clicks_by_activity_type"] = list(coll.aggregate([
-        {"$group": {"_id": "$activity_type", "clicks": {"$sum": "$sum_click"}, "events": {"$sum": 1}}},
-        {"$sort": {"clicks": -1}}], allowDiskUse=True))
+    # Query 1: clicks per activity type (Mongo aggregates by site, SQLite maps site -> activity)
+    by_site = list(coll.aggregate([
+        {"$group": {"_id": SITE_EXPR,
+                    "clicks": {"$sum": {"$sum": "$n"}},
+                    "events": {"$sum": {"$size": "$n"}}}},
+    ], allowDiskUse=True))
+    results["clicks_by_activity_type"] = []
+    if by_site:
+        conn = sqlite3.connect(sqlite_db_path)
+        try:
+            conn.execute("CREATE TEMP TABLE mongo_site_totals (id_site INTEGER, clicks INTEGER, events INTEGER)")
+            conn.executemany("INSERT INTO mongo_site_totals VALUES (?, ?, ?)",
+                             [(int(r["_id"]), r["clicks"], r["events"]) for r in by_site])
+            results["clicks_by_activity_type"] = [
+                {"_id": r[0], "clicks": r[1], "events": r[2]}
+                for r in conn.execute("""SELECT v.activity_type, SUM(m.clicks), SUM(m.events)
+                    FROM mongo_site_totals m JOIN dim_vles v ON v.id_site = m.id_site
+                    GROUP BY v.activity_type ORDER BY SUM(m.clicks) DESC""")
+            ]
+        finally:
+            conn.close()
     for row in results["clicks_by_activity_type"][:6]:
         log_stage(logger, stage, f"  {str(row['_id']):<16} clicks={row['clicks']:<10} events={row['events']}")
 
-    # Query 2: $facet = several small analyses computed in one pass over the data
+    # Query 2: $facet, several analyses in one pass
     try:
-        results["facet_summary"] = list(coll.aggregate([{"$facet": {
-            "events_by_module": [{"$group": {"_id": "$code_module", "events": {"$sum": 1}}},{"$sort": {"_id": 1}}],
-            "click_stats": [{"$group": {"_id": None, "total_clicks": {"$sum": "$sum_click"},
-                                        "avg_clicks": {"$avg": "$sum_click"},
-                                        "students": {"$addToSet": "$id_student"}}},
-                            {"$project": {"_id": 0, "total_clicks": 1, "avg_clicks": 1,"distinct_students": {"$size": "$students"}}}]}}],
-            allowDiskUse=True))
+        facet = list(coll.aggregate([{"$facet": {
+            "totals": [{"$group": {"_id": None,
+                                   "buckets": {"$sum": 1},
+                                   "total_clicks": {"$sum": {"$sum": "$n"}},
+                                   "click_events": {"$sum": {"$size": "$n"}}}},
+                       {"$project": {"_id": 0}}],
+            "distinct_students": [{"$group": {"_id": STUDENT_EXPR}},
+                                  {"$count": "n"}],
+            "top_sites": [{"$group": {"_id": SITE_EXPR, "clicks": {"$sum": {"$sum": "$n"}}}},
+                          {"$sort": {"clicks": -1}}, {"$limit": 5}],
+        }}], allowDiskUse=True))
+        results["facet_summary"] = facet
         log_stage(logger, stage, "$facet pipeline ran successfully")
     except Exception as e:
         log_stage(logger, stage, f"$facet pipeline skipped: {e}", "warning")
     return results
-
 
 def verify_mongo(cfg: PipelineConfig, table: TableConfig, stats: dict, logger: logging.Logger) -> None:
     """Prove the MongoDB load worked, and save the evidence to mongodb_verification.json.
@@ -510,13 +532,13 @@ def verify_mongo(cfg: PipelineConfig, table: TableConfig, stats: dict, logger: l
             "indexes": indexes,
             "sample_documents": list(coll.find({}, {"_id": 0}).limit(3)),
         }
-        proof.update(run_mongo_queries(coll, logger))
+        proof.update(run_mongo_queries(coll, logger, os.path.join(cfg.SQLITE_OUTPUT_PATH, "warehouse.db")))
     finally:
         client.close()
 
     checks = {
         "document count matches inserted rows": in_db >= stats["inserted"],
-        "unique index exists": "uniq_studentvle_event" in indexes,
+        "_id_ index exists": "_id_" in indexes,
     }
     proof["checks"] = checks
     os.makedirs(os.path.dirname(cfg.MONGO_PROOF_OUTPUT_PATH), exist_ok=True)
@@ -590,58 +612,84 @@ def _create_table_if_not_exists(cur, table: TableConfig, df: pd.DataFrame) -> No
     cur.execute(ddl)
 
 def load_clickstream_to_mongo(
-    path: str, db_name: str, collection_name: str, mongo_uri: str, unique_key_columns: list[str], quarantine_dir: str, 
-    logger: logging.Logger, table: TableConfig, parents: dict[str, pd.DataFrame], quarantine: Quarantine, chunk_size: int = 50_000
-):
+    path: str, db_name: str, collection_name: str, mongo_uri: str,
+    unique_key_columns: list[str], quarantine_dir: str,
+    logger: logging.Logger, table: TableConfig,
+    parents: dict[str, pd.DataFrame], quarantine: Quarantine,
+    chunk_size: int = 500_000, batch_size: int = 5_000,
+    max_rows: int | None = None
+) -> dict:
     stage = "Clickstream to MongoDB"
     source_file = os.path.basename(path)
-
     log_stage(logger, stage, f"Starting load of {source_file} into '{collection_name}'")
 
-    client = MongoClient(mongo_uri)
-    collection = client[db_name][collection_name]
-    collection.create_index([(col, 1) for col in unique_key_columns], unique=True, name="uniq_studentvle_event")
-
     rows_read = 0
-    rows_valid = 0
+    kept = []  # compact int32 frames, one per chunk
+
+    # extract + transform per chunk w/ quarantine checks
+    for chunk_idx, chunk in enumerate(pd.read_csv(path, chunksize=chunk_size, nrows=max_rows)):
+        rows_read += len(chunk)
+        clean = transform_table(chunk, table, logger, parents, quarantine)
+        if clean.empty:
+            continue
+        kept.append(
+            clean[["id_student", "id_site", "date", "sum_click"]].astype("int32")
+        )
+        log_stage(logger, stage, f"Chunk {chunk_idx}: {len(clean)}/{len(chunk)} rows kept")
+
+    if not kept:
+        log_stage(logger, stage, "No valid rows to load", level="warning")
+        return {"rows_read": rows_read, "rows_valid": 0, "rows_deduped": 0,
+                "inserted": 0, "skipped_duplicates": 0}
+
+    df = pd.concat(kept, ignore_index=True)
+    del kept
+    rows_valid = len(df)
+
+    # cross-chunk dedup on the real unique key 
+    df = df.drop_duplicates(subset=["id_student", "id_site", "date"], keep="first")
+    rows_deduped = len(df)
+    log_stage(logger, stage,
+              f"{rows_valid - rows_deduped} duplicate (student, site, date) rows dropped across chunks")
+
+    # build one bucket per student, site 
+    df = df.sort_values(["id_student", "id_site", "date"], kind="stable")
+    keys = df["id_student"].to_numpy(dtype="int64") * 10_000_000 + df["id_site"].to_numpy(dtype="int64")
+    d = df["date"].to_numpy()
+    n = df["sum_click"].to_numpy()
+    bounds = np.flatnonzero(keys[1:] != keys[:-1]) + 1
+    starts = np.r_[0, bounds]
+    ends = np.r_[bounds, len(keys)]
+    log_stage(logger, stage, f"Built {len(starts)} bucket documents from {rows_deduped} rows")
+
+    # load: drop + rebuild 
+    client = MongoClient(mongo_uri, serverSelectionTimeoutMS=10000)
     total_inserted = 0
-    total_skipped = 0
-
     try:
-        for chunk_idx, chunk in enumerate(pd.read_csv(path, chunksize=chunk_size)):
-            rows_read += len(chunk)
-
-            clean_chunk = transform_table(chunk, table, logger, parents, quarantine)
-            rows_valid += len(clean_chunk)
-
-            if clean_chunk.empty:
-                continue
-
-            docs = clean_chunk.to_dict(orient="records")
-            for i, doc in enumerate(docs):
-                doc["_source_file"] = source_file
-                doc["_source_line"] = chunk_idx * chunk_size + i
-
-            try:
-                result = collection.insert_many(docs, ordered=False)
-                inserted = len(result.inserted_ids)
-                total_inserted += inserted
-                log_stage(logger, stage, f"Chunk {chunk_idx}: inserted {inserted}/{len(docs)} rows")
-            except BulkWriteError as bwe:
-                inserted = bwe.details.get("nInserted", 0)
-                skipped = len(docs) - inserted
-                total_inserted += inserted
-                total_skipped += skipped
-                log_stage(logger, stage, f"Chunk {chunk_idx}: inserted {inserted}, skipped {skipped} duplicates", level="warning")
-
+        coll = client[db_name][collection_name]
+        coll.drop()
+        batch = []
+        for s, e in zip(starts, ends):
+            batch.append({"_id": int(keys[s]), "id_site": int(df["id_site"].iat[s]),
+                          "d": d[s:e].tolist(), "n": n[s:e].tolist()})
+            if len(batch) >= batch_size:
+                coll.insert_many(batch, ordered=False)
+                total_inserted += len(batch)
+                batch = []
+                if (total_inserted // batch_size) % 20 == 0:
+                    log_stage(logger, stage, f"Inserted {total_inserted}/{len(starts)} buckets")
+        if batch:
+            coll.insert_many(batch, ordered=False)
+            total_inserted += len(batch)
     finally:
         client.close()
 
     stats = {
         "rows_read": rows_read,
         "rows_valid": rows_valid,
-        "inserted": total_inserted,
-        "skipped_duplicates": total_skipped,
+        "rows_deduped": rows_deduped,
+        "inserted": total_inserted,          
+        "skipped_duplicates": rows_valid - rows_deduped,
     }
     log_stage(logger, stage, f"Finished: {stats}")
     return stats
@@ -661,10 +709,15 @@ def run_pipeline() -> dict:
 
     sqlite_db_path = os.path.join(cfg.SQLITE_OUTPUT_PATH, "warehouse.db")
     landing_zone = Path(cfg.LANDING_ZONE_PATH)
+    CLICKSTREAM_TEST_ROWS = None
+    is_test = CLICKSTREAM_TEST_ROWS is not None
+
 
     for table in cfg.TABLES:
         file_path = landing_zone / table.source_file
         table_key = Path(table.source_file).stem
+
+        collection_name = "clickstream_test" if is_test else table.output_name
 
         if table.destination == "sqlite":
             # Extract
@@ -690,7 +743,7 @@ def run_pipeline() -> dict:
             stats = load_clickstream_to_mongo(
                 str(file_path),
                 cfg.MONGO_DB_NAME,
-                table.output_name,
+                collection_name,
                 cfg.MONGO_URI,
                 table.unique_key_columns,
                 cfg.PROCESSED_PATH,
@@ -698,6 +751,7 @@ def run_pipeline() -> dict:
                 table,
                 cleaned,
                 quarantine,
+                max_rows=CLICKSTREAM_TEST_ROWS,
             )
             mongo_stats[table.output_name] = stats
 
@@ -708,10 +762,8 @@ def run_pipeline() -> dict:
         verify_sqlite(sqlite_db_path, expected_counts, cfg.TABLES, logger)
 
     for table in cfg.TABLES:
-        if table.destination == "mongo":
-            stats = mongo_stats.get(table.output_name)
-            if stats:
-                verify_mongo(cfg, table, stats, logger)
+        if table.destination == "mongo" and not is_test:
+            verify_mongo(cfg, table, mongo_stats[table.output_name], logger)
 
     elapsed = time.perf_counter() - start_time
     log_stage(logger, "COMPLETE", f"Multi-target pipeline execution finished successfully in {elapsed:.2f} seconds.")
@@ -723,3 +775,5 @@ def run_pipeline() -> dict:
 if __name__ == "__main__":
     summary = run_pipeline()
     print(summary)
+
+    
