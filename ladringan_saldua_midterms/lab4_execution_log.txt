@@ -1,0 +1,127 @@
+=== SQLite Optimization Lab ===
+Database: C:\Users\Arrcann\Downloads\Main\Programming\Data_Warehousing_4th\ladringan_saldua_midterms\data\SQLite\warehouse.db
+[foreign_keys] ok
+[journal_mode] <sqlite3.Row object at 0x000001DAC183E8C0>
+[synchronous] ok
+[cache_size] ok
+[temp_store] ok
+
+--- BEFORE INDEXES ---
+
+=== Before indexes: pass-rate analysis by TMA assessments ===
+
+        SELECT s.code_module, s.code_presentation, s.id_student,
+               AVG(f.score) AS avg_score,
+               COUNT(*) AS assessment_count
+        FROM dim_students s
+        JOIN fact_assessment_results f ON s.id_student = f.id_student
+        JOIN dim_assessments a ON f.id_assessment = a.id_assessment
+        WHERE s.final_result = 'Pass'
+          AND a.assessment_type = 'TMA'
+        GROUP BY s.code_module, s.code_presentation, s.id_student
+        ORDER BY avg_score DESC
+        LIMIT 20;
+    
+
+EXPLAIN QUERY PLAN:
+(11, 0, 54, 'SEARCH s USING COVERING INDEX idx_dim_students_final_result (final_result=?)')
+(15, 0, 55, 'SEARCH f USING COVERING INDEX idx_fact_assessment_results_student_assessment (id_student=?)')
+(21, 0, 46, 'SEARCH a USING INDEX sqlite_autoindex_dim_assessments_1 (id_assessment=?)')
+(72, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[query result] 20 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 587906, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 327057, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 1942870, 'avg_score': 98.5, 'assessment_count': 4}
+{'code_module': 'EEE', 'code_presentation': '2014J', 'id_student': 202606, 'avg_score': 98.25, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 283798, 'avg_score': 98.0, 'assessment_count': 2}
+
+=== Before/after: registration counts by course ===
+
+        SELECT code_module, code_presentation, COUNT(*) AS registrations
+        FROM fact_registration
+        WHERE date_registration IS NOT NULL
+        GROUP BY code_module, code_presentation
+        ORDER BY registrations DESC
+        LIMIT 10;
+    
+
+EXPLAIN QUERY PLAN:
+(9, 0, 226, 'SCAN fact_registration USING INDEX sqlite_autoindex_fact_registration_1')
+(48, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[secondary query result] 10 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014J', 'registrations': 2495}
+{'code_module': 'FFF', 'code_presentation': '2014J', 'registrations': 2363}
+{'code_module': 'BBB', 'code_presentation': '2014J', 'registrations': 2291}
+{'code_module': 'FFF', 'code_presentation': '2013J', 'registrations': 2282}
+{'code_module': 'BBB', 'code_presentation': '2013J', 'registrations': 2235}
+
+--- INDEX CREATION ---
+[index] CREATE INDEX IF NOT EXISTS idx_dim_students_final_result ON dim_students(final_result, code_module, code_presentation, id_student);
+[index] CREATE INDEX IF NOT EXISTS idx_dim_assessments_type_date ON dim_assessments(assessment_type, date, id_assessment);
+[index] CREATE INDEX IF NOT EXISTS idx_fact_assessment_results_student_assessment ON fact_assessment_results(id_student, id_assessment, score);
+[index] CREATE INDEX IF NOT EXISTS idx_fact_registration_date_module ON fact_registration(date_registration, code_module, code_presentation, id_student);
+[index] CREATE INDEX IF NOT EXISTS idx_dim_courses_module_presentation ON dim_courses(code_module, code_presentation);
+
+--- AFTER INDEXES ---
+
+=== After indexes: pass-rate analysis by TMA assessments ===
+
+        SELECT s.code_module, s.code_presentation, s.id_student,
+               AVG(f.score) AS avg_score,
+               COUNT(*) AS assessment_count
+        FROM dim_students s
+        JOIN fact_assessment_results f ON s.id_student = f.id_student
+        JOIN dim_assessments a ON f.id_assessment = a.id_assessment
+        WHERE s.final_result = 'Pass'
+          AND a.assessment_type = 'TMA'
+        GROUP BY s.code_module, s.code_presentation, s.id_student
+        ORDER BY avg_score DESC
+        LIMIT 20;
+    
+
+EXPLAIN QUERY PLAN:
+(11, 0, 54, 'SEARCH s USING COVERING INDEX idx_dim_students_final_result (final_result=?)')
+(15, 0, 55, 'SEARCH f USING COVERING INDEX idx_fact_assessment_results_student_assessment (id_student=?)')
+(21, 0, 46, 'SEARCH a USING INDEX sqlite_autoindex_dim_assessments_1 (id_assessment=?)')
+(72, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[query result] 20 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 587906, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 327057, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 1942870, 'avg_score': 98.5, 'assessment_count': 4}
+{'code_module': 'EEE', 'code_presentation': '2014J', 'id_student': 202606, 'avg_score': 98.25, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 283798, 'avg_score': 98.0, 'assessment_count': 2}
+
+=== Before/after: registration counts by course ===
+
+        SELECT code_module, code_presentation, COUNT(*) AS registrations
+        FROM fact_registration
+        WHERE date_registration IS NOT NULL
+        GROUP BY code_module, code_presentation
+        ORDER BY registrations DESC
+        LIMIT 10;
+    
+
+EXPLAIN QUERY PLAN:
+(9, 0, 226, 'SCAN fact_registration USING INDEX sqlite_autoindex_fact_registration_1')
+(48, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[secondary query result] 10 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014J', 'registrations': 2495}
+{'code_module': 'FFF', 'code_presentation': '2014J', 'registrations': 2363}
+{'code_module': 'BBB', 'code_presentation': '2014J', 'registrations': 2291}
+{'code_module': 'FFF', 'code_presentation': '2013J', 'registrations': 2282}
+{'code_module': 'BBB', 'code_presentation': '2013J', 'registrations': 2235}
+
+[backup] Created backup at backups\warehouse_backup_20261015_203848.db
+
+=== Final row counts ===
+agg_bucket_engagement: 0
+dim_assessments: 195
+dim_courses: 22
+dim_students: 32593
+dim_vles: 6364
+fact_assessment_results: 171047
+fact_registration: 32593
