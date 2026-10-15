@@ -111,15 +111,17 @@ def get_config():
             "MONGO_URI is not set. Copy .env.example to .env and set your MongoDB connection string."
         )
 
+    root = Path(__file__).resolve().parent
+
     return PipelineConfig(
-        LANDING_ZONE_PATH="ladringan_saldua_midterms/landing_zone/archive",
-        PROCESSED_PATH="ladringan_saldua_midterms/landing_zone/_processed",
-        SQLITE_OUTPUT_PATH="ladringan_saldua_midterms/data/SQLite",
+        LANDING_ZONE_PATH=str(root / "landing_zone" / "archive"),
+        PROCESSED_PATH=str(root / "landing_zone" / "_processed"),
+        SQLITE_OUTPUT_PATH=str(root / "data" / "SQLite"),
         MONGO_URI=mongo_uri,
         MONGO_DB_NAME="VLE_Logs",
-        MONGO_PROOF_OUTPUT_PATH="ladringan_saldua_midterms/data/MongoDB/mongodb_verification.json",
-        LOG_PATH="ladringan_saldua_midterms/logs",
-        QUARANTINE_PATH="ladringan_saldua_midterms/quarantine",
+        MONGO_PROOF_OUTPUT_PATH=str(root / "data" / "MongoDB" / "mongodb_verification.json"),
+        LOG_PATH=str(root / "logs"),
+        QUARANTINE_PATH=str(root / "quarantine"),
         TABLES=[
             make_table(
                 source_file="courses.csv",
