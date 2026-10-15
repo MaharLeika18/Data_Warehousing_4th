@@ -11,14 +11,14 @@ BACKUP_DIR = Path("backups")
 
 
 def connect_db(db_path: Path) -> sqlite3.Connection:
-    # Open the warehouse
+    # Open the warehouse teehee
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 
 
 def set_pragmas(conn: sqlite3.Connection) -> None:
-    # Set SQLite options
+    # uhhhhh SQLite options 
     pragmas = {
         "PRAGMA foreign_keys = ON;": "foreign_keys",
         "PRAGMA journal_mode = WAL;": "journal_mode",
@@ -45,7 +45,7 @@ def explain_query_plan(conn: sqlite3.Connection, label: str, query: str) -> None
 
 
 def backup_database(db_path: Path, backup_dir: Path) -> Path:
-    # Save a backup
+    # Save a backup ofc
     backup_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_path = backup_dir / f"{db_path.stem}_backup_{timestamp}.db"
