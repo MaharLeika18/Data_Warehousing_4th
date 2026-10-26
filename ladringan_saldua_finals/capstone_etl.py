@@ -1,24 +1,21 @@
 from __future__ import annotations
-from venv import logger
 import pandas as pd
 import numpy as np
 import os
 import json
 import sqlite3
-import pymongo
 from pymongo import MongoClient
 from pathlib import Path
 import logging
-from pathlib import Path
 from datetime import datetime, timezone
 import time
 from dotenv import load_dotenv
-from pymongo import ReplaceOne
-from pymongo.errors import BulkWriteError
 from dataclasses import dataclass, field
-from typing import Callable, Literal
+from typing import Callable
 
 # ------ Config  ------
+BASE_DIR = Path(__file__).resolve().parent
+
 @dataclass
 class TableConfig:
     source_file: str
@@ -50,7 +47,6 @@ COLUMN_TYPES = {
     "id_assessment": "required_int",
     "id_site": "required_int",
     "id_student": "required_int",
-    "date": "required_int",              
     "date_submitted": "required_int",
     "is_banked": "required_int",
     "sum_click": "required_int",
@@ -60,6 +56,7 @@ COLUMN_TYPES = {
     "module_presentation_length": "required_int",
 
     # optional integers
+    "date": "optional_int",              
     "week_from": "optional_int",
     "week_to": "optional_int",
     "date_registration": "optional_int",
@@ -196,21 +193,21 @@ def make_table(source_file, destination, output_name, unique_key_columns, column
 
 def get_config():
     load_dotenv()
-    mongo_uri = os.environ.get("MONGODB_URI")
+    mongo_uri = os.environ.get("MONGO_URI")
     if not mongo_uri:
         raise RuntimeError(
             "MONGO_URI is not set. Copy .env.example to .env and set your MongoDB connection string."
         )
 
     return PipelineConfig(
-        LANDING_ZONE_PATH="ladringan_saldua_midterms/landing_zone/archive",
-        PROCESSED_PATH="ladringan_saldua_midterms/landing_zone/_processed",
-        SQLITE_OUTPUT_PATH="ladringan_saldua_midterms/data/SQLite",
+        LANDING_ZONE_PATH=str(BASE_DIR / "landing_zone" / "archive"),
+        PROCESSED_PATH=str(BASE_DIR / "landing_zone" / "_processed"),
+        SQLITE_OUTPUT_PATH=str(BASE_DIR / "data" / "SQLite"),
         MONGO_URI=mongo_uri,
         MONGO_DB_NAME="VLE_Logs",
-        MONGO_PROOF_OUTPUT_PATH="ladringan_saldua_midterms/data/MongoDB/mongodb_verification.json",
-        LOG_PATH="ladringan_saldua_midterms/logs",
-        QUARANTINE_PATH="ladringan_saldua_midterms/quarantine",
+        MONGO_PROOF_OUTPUT_PATH=str(BASE_DIR / "data" / "MongoDB" / "mongodb_verification.json"),
+        LOG_PATH=str(BASE_DIR / "logs"),
+        QUARANTINE_PATH=str(BASE_DIR / "quarantine"),        
         TABLES=[
             make_table(
                 source_file="courses.csv",
@@ -516,30 +513,30 @@ def verify_sqlite(sqlite_db_path: str, expected: dict[str, int], tables: list[Ta
             if not passed:
                 problems.append(f"{table} row count")
 
-            total_orphans = 0                                          # Check 2
-            for t in tables:
-                if t.destination != "sqlite" or not t.references:
+        total_orphans = 0                                           # Check 2
+        for t in tables:
+            if t.destination != "sqlite" or not t.references:
+                continue
+            for cols, parent_name in t.references:
+                parent_table = name_to_table.get(parent_name)
+                if parent_table is None:
                     continue
-                for cols, parent_name in t.references:
-                    parent_table = name_to_table.get(parent_name)
-                    if parent_table is None:
-                        continue
-                    join_clause = " AND ".join(f"f.{c} = d.{c}" for c in cols)
-                    where_clause = " AND ".join(f"d.{c} IS NULL" for c in cols)
-                    sql = f"""
-                        SELECT COUNT(*) FROM {t.output_name} f
-                        LEFT JOIN {parent_table} d ON {join_clause}
-                        WHERE {where_clause}
-                    """
-                    orphans = conn.execute(sql).fetchone()[0]
-                    passed = orphans == 0
-                    log_stage(
-                        logger, stage,
-                        f"[{'PASS' if passed else 'FAIL'}] foreign key {t.output_name} -> {parent_table}: {orphans} orphan rows",
-                    )
-                    if not passed:
-                        problems.append(f"{t.output_name} -> {parent_table} orphans")
-                    total_orphans += orphans
+                join_clause = " AND ".join(f"f.{c} = d.{c}" for c in cols)
+                where_clause = " AND ".join(f"d.{c} IS NULL" for c in cols)
+                sql = f"""
+                    SELECT COUNT(*) FROM {t.output_name} f
+                    LEFT JOIN {parent_table} d ON {join_clause}
+                    WHERE {where_clause}
+                """
+                orphans = conn.execute(sql).fetchone()[0]
+                passed = orphans == 0
+                log_stage(
+                    logger, stage,
+                    f"[{'PASS' if passed else 'FAIL'}] foreign key {t.output_name} -> {parent_table}: {orphans} orphan rows",
+                )
+                if not passed:
+                    problems.append(f"{t.output_name} -> {parent_table} orphans")
+                total_orphans += orphans
 
         integrity = conn.execute("PRAGMA integrity_check").fetchone()[0]   # Check 3
         log_stage(logger, stage, f"[{'PASS' if integrity == 'ok' else 'FAIL'}] integrity_check: {integrity}")
@@ -628,7 +625,7 @@ def verify_mongo(cfg: PipelineConfig, table: TableConfig, stats: dict, logger: l
         client.close()
 
     checks = {
-        "document count matches inserted rows": in_db >= stats["inserted"],
+        "document count matches inserted rows": in_db == stats["inserted"],
         "_id_ index exists": "_id_" in indexes,
     }
     proof["checks"] = checks
@@ -796,7 +793,7 @@ def run_pipeline() -> dict:
     logger = setup_logger(cfg.LOG_PATH)
     log_stage(logger, "Pipeline", "Pipeline run started")
 
-    quarantine = Quarantine(cfg.PROCESSED_PATH, logger)
+    quarantine = Quarantine(cfg.QUARANTINE_PATH, logger)
     cleaned = {}
     expected_counts = {}
     mongo_stats = {}

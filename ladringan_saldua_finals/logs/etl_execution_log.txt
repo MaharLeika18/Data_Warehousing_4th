@@ -1,0 +1,258 @@
+2026-10-26 23:45:04,672 | INFO     | [Pipeline] Pipeline run started
+2026-10-26 23:45:04,681 | INFO     | [Init SQLite] Schema created (PK/FK/CHECK constraints, indexes)
+2026-10-26 23:45:04,705 | INFO     | [Extract] Read 22 rows, 4 columns from courses.csv
+2026-10-26 23:45:04,705 | INFO     | [Transform] Starting transformation of 'dim_courses' (22 rows in)
+2026-10-26 23:45:04,710 | INFO     | [Transform] dim_courses: normalized column names, kept 4 columns
+2026-10-26 23:45:04,720 | INFO     | [Transform] dim_courses: normalized null-like tokens across 3 columns
+2026-10-26 23:45:04,723 | INFO     | [Transform] dim_courses: validated required integer columns ['module_presentation_length']
+2026-10-26 23:45:04,723 | INFO     | [Transform] dim_courses: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:04,726 | INFO     | [Transform] dim_courses: in=22 out=22 removed=0 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:04,728 | INFO     | [dim_courses -> SQLite] Upserted 22 rows into 'dim_courses'
+2026-10-26 23:45:04,730 | INFO     | [Extract] Read 206 rows, 7 columns from assessments.csv
+2026-10-26 23:45:04,730 | INFO     | [Transform] Starting transformation of 'dim_assessments' (206 rows in)
+2026-10-26 23:45:04,730 | INFO     | [Transform] dim_assessments: normalized column names, kept 7 columns
+2026-10-26 23:45:04,733 | INFO     | [Transform] dim_assessments: normalized null-like tokens across 6 columns
+2026-10-26 23:45:04,734 | INFO     | [Transform] dim_assessments: validated required integer columns ['id_assessment']
+2026-10-26 23:45:04,734 | INFO     | [Transform] dim_assessments: coerced optional numeric columns ['date', 'weight']
+2026-10-26 23:45:04,735 | INFO     | [Transform] dim_assessments: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:04,737 | INFO     | [Transform] dim_assessments: in=206 out=206 removed=0 | remaining NULLs (nullable, kept): {'date': 11}
+2026-10-26 23:45:04,741 | INFO     | [dim_assessments -> SQLite] Upserted 206 rows into 'dim_assessments'
+2026-10-26 23:45:04,747 | INFO     | [Extract] Read 6364 rows, 7 columns from vle.csv
+2026-10-26 23:45:04,747 | INFO     | [Transform] Starting transformation of 'dim_vles' (6364 rows in)
+2026-10-26 23:45:04,748 | INFO     | [Transform] dim_vles: normalized column names, kept 7 columns
+2026-10-26 23:45:04,756 | INFO     | [Transform] dim_vles: normalized null-like tokens across 6 columns
+2026-10-26 23:45:04,759 | INFO     | [Transform] dim_vles: validated required integer columns ['id_site']
+2026-10-26 23:45:04,762 | INFO     | [Transform] dim_vles: coerced optional numeric columns ['week_from', 'week_to']
+2026-10-26 23:45:04,763 | INFO     | [Transform] dim_vles: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:04,775 | INFO     | [Transform] dim_vles: in=6364 out=6364 removed=0 | remaining NULLs (nullable, kept): {'week_from': 5243, 'week_to': 5243}
+2026-10-26 23:45:04,823 | INFO     | [dim_vles -> SQLite] Upserted 6364 rows into 'dim_vles'
+2026-10-26 23:45:04,876 | INFO     | [Extract] Read 32593 rows, 13 columns from studentInfo.csv
+2026-10-26 23:45:04,876 | INFO     | [Transform] Starting transformation of 'dim_students' (32593 rows in)
+2026-10-26 23:45:04,877 | INFO     | [Transform] dim_students: normalized column names, kept 13 columns
+2026-10-26 23:45:04,916 | INFO     | [Transform] dim_students: normalized null-like tokens across 12 columns
+2026-10-26 23:45:04,952 | INFO     | [Transform] dim_students: validated required integer columns ['id_student', 'num_of_prev_attempts', 'studied_credits']
+2026-10-26 23:45:04,953 | INFO     | [Transform] dim_students: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:04,993 | INFO     | [Transform] dim_students: in=32593 out=32593 removed=0 | remaining NULLs (nullable, kept): {'imd_band': 1111}
+2026-10-26 23:45:05,352 | INFO     | [dim_students -> SQLite] Upserted 32593 rows into 'dim_students'
+2026-10-26 23:45:05,372 | INFO     | [Extract] Read 32593 rows, 6 columns from studentRegistration.csv
+2026-10-26 23:45:05,373 | INFO     | [Transform] Starting transformation of 'fact_registration' (32593 rows in)
+2026-10-26 23:45:05,373 | INFO     | [Transform] fact_registration: normalized column names, kept 6 columns
+2026-10-26 23:45:05,403 | INFO     | [Transform] fact_registration: normalized null-like tokens across 5 columns
+2026-10-26 23:45:05,415 | INFO     | [Transform] fact_registration: validated required integer columns ['id_student']
+2026-10-26 23:45:05,432 | INFO     | [Transform] fact_registration: coerced optional numeric columns ['date_registration', 'date_unregistration']
+2026-10-26 23:45:05,433 | INFO     | [Transform] fact_registration: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:05,531 | INFO     | [Transform] fact_registration: in=32593 out=32593 removed=0 | remaining NULLs (nullable, kept): {'date_registration': 45, 'date_unregistration': 22521}
+2026-10-26 23:45:05,668 | INFO     | [fact_registration -> SQLite] Upserted 32593 rows into 'fact_registration'
+2026-10-26 23:45:05,727 | INFO     | [Extract] Read 173912 rows, 6 columns from studentAssessment.csv
+2026-10-26 23:45:05,728 | INFO     | [Transform] Starting transformation of 'fact_assessment_results' (173912 rows in)
+2026-10-26 23:45:05,732 | INFO     | [Transform] fact_assessment_results: normalized column names, kept 6 columns
+2026-10-26 23:45:05,914 | INFO     | [Transform] fact_assessment_results: normalized null-like tokens across 5 columns
+2026-10-26 23:45:06,122 | INFO     | [Transform] fact_assessment_results: validated required integer columns ['id_assessment', 'id_student', 'date_submitted', 'is_banked']
+2026-10-26 23:45:06,158 | INFO     | [Transform] fact_assessment_results: coerced optional numeric columns ['score']
+2026-10-26 23:45:06,198 | INFO     | [Transform] fact_assessment_results: in=173912 out=173912 removed=0 | remaining NULLs (nullable, kept): {'score': 173}
+2026-10-26 23:45:06,960 | INFO     | [fact_assessment_results -> SQLite] Upserted 173912 rows into 'fact_assessment_results'
+2026-10-26 23:45:06,968 | INFO     | [Clickstream to MongoDB] Starting load of studentVle.csv into 'clickstream_events'
+2026-10-26 23:45:07,240 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:07,257 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:07,661 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:08,131 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:08,284 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:08,298 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:08,350 | INFO     | [Transform] clickstream_events: 27378 exact duplicate rows dropped
+2026-10-26 23:45:09,328 | INFO     | [Transform] clickstream_events: in=500000 out=472622 removed=27378 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:09,331 | INFO     | [Clickstream to MongoDB] Chunk 0: 472622/500000 rows kept
+2026-10-26 23:45:09,567 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:09,576 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:09,957 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:10,409 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:10,542 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:10,552 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:10,593 | INFO     | [Transform] clickstream_events: 55114 exact duplicate rows dropped
+2026-10-26 23:45:11,410 | INFO     | [Transform] clickstream_events: in=500000 out=444886 removed=55114 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:11,412 | INFO     | [Clickstream to MongoDB] Chunk 1: 444886/500000 rows kept
+2026-10-26 23:45:11,629 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:11,635 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:12,031 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:12,521 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:12,654 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:12,666 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:12,707 | INFO     | [Transform] clickstream_events: 54318 exact duplicate rows dropped
+2026-10-26 23:45:13,541 | INFO     | [Transform] clickstream_events: in=500000 out=445682 removed=54318 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:13,543 | INFO     | [Clickstream to MongoDB] Chunk 2: 445682/500000 rows kept
+2026-10-26 23:45:13,766 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:13,777 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:14,167 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:14,618 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:14,751 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:14,761 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:14,810 | INFO     | [Transform] clickstream_events: 42880 exact duplicate rows dropped
+2026-10-26 23:45:15,677 | INFO     | [Transform] clickstream_events: in=500000 out=457120 removed=42880 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:15,680 | INFO     | [Clickstream to MongoDB] Chunk 3: 457120/500000 rows kept
+2026-10-26 23:45:15,869 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:15,878 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:16,312 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:16,885 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:17,028 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:17,049 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:17,097 | INFO     | [Transform] clickstream_events: 49102 exact duplicate rows dropped
+2026-10-26 23:45:18,011 | INFO     | [Transform] clickstream_events: in=500000 out=450898 removed=49102 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:18,020 | INFO     | [Clickstream to MongoDB] Chunk 4: 450898/500000 rows kept
+2026-10-26 23:45:18,216 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:18,238 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:18,613 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:19,083 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:19,226 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:19,237 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:19,284 | INFO     | [Transform] clickstream_events: 45346 exact duplicate rows dropped
+2026-10-26 23:45:20,172 | INFO     | [Transform] clickstream_events: in=500000 out=454654 removed=45346 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:20,174 | INFO     | [Clickstream to MongoDB] Chunk 5: 454654/500000 rows kept
+2026-10-26 23:45:20,396 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:20,412 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:20,819 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:21,281 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:21,418 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:21,430 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:21,476 | INFO     | [Transform] clickstream_events: 28313 exact duplicate rows dropped
+2026-10-26 23:45:22,343 | INFO     | [Transform] clickstream_events: in=500000 out=471687 removed=28313 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:22,346 | INFO     | [Clickstream to MongoDB] Chunk 6: 471687/500000 rows kept
+2026-10-26 23:45:22,574 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:22,590 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:23,002 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:23,465 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:23,613 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:23,624 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:23,676 | INFO     | [Transform] clickstream_events: 23523 exact duplicate rows dropped
+2026-10-26 23:45:24,681 | INFO     | [Transform] clickstream_events: in=500000 out=476477 removed=23523 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:24,690 | INFO     | [Clickstream to MongoDB] Chunk 7: 476477/500000 rows kept
+2026-10-26 23:45:24,895 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:24,908 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:25,281 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:25,750 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:25,903 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:25,913 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:25,964 | INFO     | [Transform] clickstream_events: 23606 exact duplicate rows dropped
+2026-10-26 23:45:26,841 | INFO     | [Transform] clickstream_events: in=500000 out=476394 removed=23606 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:26,844 | INFO     | [Clickstream to MongoDB] Chunk 8: 476394/500000 rows kept
+2026-10-26 23:45:27,009 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:27,022 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:27,394 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:27,880 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:28,032 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:28,048 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:28,103 | INFO     | [Transform] clickstream_events: 30337 exact duplicate rows dropped
+2026-10-26 23:45:28,990 | INFO     | [Transform] clickstream_events: in=500000 out=469663 removed=30337 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:28,995 | INFO     | [Clickstream to MongoDB] Chunk 9: 469663/500000 rows kept
+2026-10-26 23:45:29,215 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:29,228 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:29,610 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:30,069 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:30,216 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:30,226 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:30,272 | INFO     | [Transform] clickstream_events: 29086 exact duplicate rows dropped
+2026-10-26 23:45:31,164 | INFO     | [Transform] clickstream_events: in=500000 out=470914 removed=29086 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:31,174 | INFO     | [Clickstream to MongoDB] Chunk 10: 470914/500000 rows kept
+2026-10-26 23:45:31,465 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:31,486 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:31,870 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:32,350 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:32,485 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:32,502 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:32,544 | INFO     | [Transform] clickstream_events: 26160 exact duplicate rows dropped
+2026-10-26 23:45:33,429 | INFO     | [Transform] clickstream_events: in=500000 out=473840 removed=26160 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:33,432 | INFO     | [Clickstream to MongoDB] Chunk 11: 473840/500000 rows kept
+2026-10-26 23:45:33,659 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:33,678 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:34,163 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:34,654 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:34,793 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:34,811 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:34,860 | INFO     | [Transform] clickstream_events: 30596 exact duplicate rows dropped
+2026-10-26 23:45:35,717 | INFO     | [Transform] clickstream_events: in=500000 out=469404 removed=30596 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:35,720 | INFO     | [Clickstream to MongoDB] Chunk 12: 469404/500000 rows kept
+2026-10-26 23:45:35,902 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:35,915 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:36,285 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:36,738 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:36,888 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:36,898 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:36,941 | INFO     | [Transform] clickstream_events: 30508 exact duplicate rows dropped
+2026-10-26 23:45:37,806 | INFO     | [Transform] clickstream_events: in=500000 out=469492 removed=30508 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:37,810 | INFO     | [Clickstream to MongoDB] Chunk 13: 469492/500000 rows kept
+2026-10-26 23:45:37,973 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:37,987 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:38,349 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:38,805 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:38,941 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:38,951 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:38,994 | INFO     | [Transform] clickstream_events: 33944 exact duplicate rows dropped
+2026-10-26 23:45:39,889 | INFO     | [Transform] clickstream_events: in=500000 out=466056 removed=33944 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:39,897 | INFO     | [Clickstream to MongoDB] Chunk 14: 466056/500000 rows kept
+2026-10-26 23:45:40,141 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:40,152 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:40,531 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:41,004 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:41,155 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:41,166 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:41,213 | INFO     | [Transform] clickstream_events: 37838 exact duplicate rows dropped
+2026-10-26 23:45:42,095 | INFO     | [Transform] clickstream_events: in=500000 out=462162 removed=37838 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:42,097 | INFO     | [Clickstream to MongoDB] Chunk 15: 462162/500000 rows kept
+2026-10-26 23:45:42,274 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:42,287 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:42,663 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:43,119 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:43,260 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:43,269 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:43,320 | INFO     | [Transform] clickstream_events: 38545 exact duplicate rows dropped
+2026-10-26 23:45:44,234 | INFO     | [Transform] clickstream_events: in=500000 out=461455 removed=38545 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:44,235 | INFO     | [Clickstream to MongoDB] Chunk 16: 461455/500000 rows kept
+2026-10-26 23:45:44,420 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:44,434 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:44,799 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:45,272 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:45,415 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:45,425 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:45,466 | INFO     | [Transform] clickstream_events: 39208 exact duplicate rows dropped
+2026-10-26 23:45:46,366 | INFO     | [Transform] clickstream_events: in=500000 out=460792 removed=39208 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:46,371 | INFO     | [Clickstream to MongoDB] Chunk 17: 460792/500000 rows kept
+2026-10-26 23:45:46,604 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:46,619 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:46,995 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:47,477 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:47,614 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:47,624 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:47,664 | INFO     | [Transform] clickstream_events: 37727 exact duplicate rows dropped
+2026-10-26 23:45:48,535 | INFO     | [Transform] clickstream_events: in=500000 out=462273 removed=37727 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:48,539 | INFO     | [Clickstream to MongoDB] Chunk 18: 462273/500000 rows kept
+2026-10-26 23:45:48,728 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:48,737 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:49,122 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:49,594 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:49,745 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:49,755 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:49,905 | INFO     | [Transform] clickstream_events: 39079 exact duplicate rows dropped
+2026-10-26 23:45:50,777 | INFO     | [Transform] clickstream_events: in=500000 out=460921 removed=39079 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:50,781 | INFO     | [Clickstream to MongoDB] Chunk 19: 460921/500000 rows kept
+2026-10-26 23:45:50,954 | INFO     | [Transform] Starting transformation of 'clickstream_events' (500000 rows in)
+2026-10-26 23:45:50,967 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:51,339 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:51,785 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:51,926 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:51,936 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:51,986 | INFO     | [Transform] clickstream_events: 45838 exact duplicate rows dropped
+2026-10-26 23:45:52,869 | INFO     | [Transform] clickstream_events: in=500000 out=454162 removed=45838 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:52,877 | INFO     | [Clickstream to MongoDB] Chunk 20: 454162/500000 rows kept
+2026-10-26 23:45:52,951 | INFO     | [Transform] Starting transformation of 'clickstream_events' (155280 rows in)
+2026-10-26 23:45:52,955 | INFO     | [Transform] clickstream_events: normalized column names, kept 6 columns
+2026-10-26 23:45:53,079 | INFO     | [Transform] clickstream_events: normalized null-like tokens across 6 columns
+2026-10-26 23:45:53,223 | INFO     | [Transform] clickstream_events: validated required integer columns ['id_student', 'id_site', 'sum_click']
+2026-10-26 23:45:53,272 | INFO     | [Transform] clickstream_events: coerced optional numeric columns ['date']
+2026-10-26 23:45:53,275 | INFO     | [Transform] clickstream_events: standardized text case on ['code_module', 'code_presentation']
+2026-10-26 23:45:53,289 | INFO     | [Transform] clickstream_events: 18716 exact duplicate rows dropped
+2026-10-26 23:45:53,574 | INFO     | [Transform] clickstream_events: in=155280 out=136564 removed=18716 | remaining NULLs (nullable, kept): none
+2026-10-26 23:45:53,575 | INFO     | [Clickstream to MongoDB] Chunk 21: 136564/155280 rows kept
+2026-10-26 23:45:54,945 | INFO     | [Clickstream to MongoDB] 1408798 duplicate (student, site, date) rows dropped across chunks
+2026-10-26 23:45:55,552 | INFO     | [Clickstream to MongoDB] Built 1960496 bucket documents from 8459320 rows
+2026-10-26 23:48:25,615 | INFO     | [Clickstream to MongoDB] Inserted 100000/1960496 buckets
+2026-10-26 23:51:41,579 | INFO     | [Clickstream to MongoDB] Inserted 200000/1960496 buckets
+2026-10-26 23:54:22,736 | INFO     | [Clickstream to MongoDB] Inserted 300000/1960496 buckets
+2026-10-26 23:56:57,905 | INFO     | [Clickstream to MongoDB] Inserted 400000/1960496 buckets
