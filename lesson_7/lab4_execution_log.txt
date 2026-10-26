@@ -1,3 +1,242 @@
-(Overwrite this)
-Console output logs capturing query execution plan comparisons (before vs. after indexing), row-count 
-verification metrics, database backup confirmations, and data mart generation stats.
+========================================
+DATABASE LAB EXECUTION LOG
+Started: Fri Oct 16 00:01:22 PST 2026
+========================================
+
+========== LAB OPTIMIZATION ==========
+=== SQLite Optimization Lab ===
+Database: /Users/louezetheianilicirsaldua/Documents/GitHub/Data_Warehousing_4th/lesson_7/warehouse.db
+[foreign_keys] ok
+[synchronous] ok
+[cache_size] ok
+[temp_store] ok
+
+--- BEFORE INDEXES ---
+
+=== Before indexes: pass-rate analysis by TMA assessments ===
+
+        SELECT s.code_module, s.code_presentation, s.id_student,
+               AVG(f.score) AS avg_score,
+               COUNT(*) AS assessment_count
+        FROM dim_students s
+        JOIN fact_assessment_results f ON s.id_student = f.id_student
+        JOIN dim_assessments a ON f.id_assessment = a.id_assessment
+        WHERE s.final_result = 'Pass'
+          AND a.assessment_type = 'TMA'
+        GROUP BY s.code_module, s.code_presentation, s.id_student
+        ORDER BY avg_score DESC
+        LIMIT 20;
+    
+
+EXPLAIN QUERY PLAN:
+(11, 0, 0, 'SEARCH s USING COVERING INDEX idx_dim_students_final_result (final_result=?)')
+(15, 0, 0, 'SEARCH f USING COVERING INDEX idx_fact_assessment_results_student_assessment (id_student=?)')
+(21, 0, 0, 'SEARCH a USING INDEX sqlite_autoindex_dim_assessments_1 (id_assessment=?)')
+(73, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[query result] 20 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 587906, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 327057, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 1942870, 'avg_score': 98.5, 'assessment_count': 4}
+{'code_module': 'EEE', 'code_presentation': '2014J', 'id_student': 202606, 'avg_score': 98.25, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 283798, 'avg_score': 98.0, 'assessment_count': 2}
+
+=== Before/after: registration counts by course ===
+
+        SELECT code_module, code_presentation, COUNT(*) AS registrations
+        FROM fact_registration
+        WHERE date_registration IS NOT NULL
+        GROUP BY code_module, code_presentation
+        ORDER BY registrations DESC
+        LIMIT 10;
+    
+
+EXPLAIN QUERY PLAN:
+(9, 0, 0, 'SCAN fact_registration USING INDEX sqlite_autoindex_fact_registration_1')
+(48, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[secondary query result] 10 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014J', 'registrations': 2495}
+{'code_module': 'FFF', 'code_presentation': '2014J', 'registrations': 2363}
+{'code_module': 'BBB', 'code_presentation': '2014J', 'registrations': 2291}
+{'code_module': 'FFF', 'code_presentation': '2013J', 'registrations': 2282}
+{'code_module': 'BBB', 'code_presentation': '2013J', 'registrations': 2235}
+
+--- INDEX CREATION ---
+[index] CREATE INDEX IF NOT EXISTS idx_dim_students_final_result ON dim_students(final_result, code_module, code_presentation, id_student);
+[index] CREATE INDEX IF NOT EXISTS idx_dim_assessments_type_date ON dim_assessments(assessment_type, date, id_assessment);
+[index] CREATE INDEX IF NOT EXISTS idx_fact_assessment_results_student_assessment ON fact_assessment_results(id_student, id_assessment, score);
+[index] CREATE INDEX IF NOT EXISTS idx_fact_registration_date_module ON fact_registration(date_registration, code_module, code_presentation, id_student);
+[index] CREATE INDEX IF NOT EXISTS idx_dim_courses_module_presentation ON dim_courses(code_module, code_presentation);
+
+--- AFTER INDEXES ---
+
+=== After indexes: pass-rate analysis by TMA assessments ===
+
+        SELECT s.code_module, s.code_presentation, s.id_student,
+               AVG(f.score) AS avg_score,
+               COUNT(*) AS assessment_count
+        FROM dim_students s
+        JOIN fact_assessment_results f ON s.id_student = f.id_student
+        JOIN dim_assessments a ON f.id_assessment = a.id_assessment
+        WHERE s.final_result = 'Pass'
+          AND a.assessment_type = 'TMA'
+        GROUP BY s.code_module, s.code_presentation, s.id_student
+        ORDER BY avg_score DESC
+        LIMIT 20;
+    
+
+EXPLAIN QUERY PLAN:
+(11, 0, 0, 'SEARCH s USING COVERING INDEX idx_dim_students_final_result (final_result=?)')
+(15, 0, 0, 'SEARCH f USING COVERING INDEX idx_fact_assessment_results_student_assessment (id_student=?)')
+(21, 0, 0, 'SEARCH a USING INDEX sqlite_autoindex_dim_assessments_1 (id_assessment=?)')
+(73, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[query result] 20 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 587906, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 327057, 'avg_score': 98.75, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014J', 'id_student': 1942870, 'avg_score': 98.5, 'assessment_count': 4}
+{'code_module': 'EEE', 'code_presentation': '2014J', 'id_student': 202606, 'avg_score': 98.25, 'assessment_count': 4}
+{'code_module': 'CCC', 'code_presentation': '2014B', 'id_student': 283798, 'avg_score': 98.0, 'assessment_count': 2}
+
+=== Before/after: registration counts by course ===
+
+        SELECT code_module, code_presentation, COUNT(*) AS registrations
+        FROM fact_registration
+        WHERE date_registration IS NOT NULL
+        GROUP BY code_module, code_presentation
+        ORDER BY registrations DESC
+        LIMIT 10;
+    
+
+EXPLAIN QUERY PLAN:
+(9, 0, 0, 'SCAN fact_registration USING INDEX sqlite_autoindex_fact_registration_1')
+(48, 0, 0, 'USE TEMP B-TREE FOR ORDER BY')
+
+[secondary query result] 10 rows returned
+{'code_module': 'CCC', 'code_presentation': '2014J', 'registrations': 2495}
+{'code_module': 'FFF', 'code_presentation': '2014J', 'registrations': 2363}
+{'code_module': 'BBB', 'code_presentation': '2014J', 'registrations': 2291}
+{'code_module': 'FFF', 'code_presentation': '2013J', 'registrations': 2282}
+{'code_module': 'BBB', 'code_presentation': '2013J', 'registrations': 2235}
+
+[backup] Created backup at lesson_7/backups/warehouse_backup_20261016_000123.db
+
+=== Final row counts ===
+agg_bucket_engagement: 1960496
+dim_assessments: 195
+dim_courses: 22
+dim_students: 32593
+dim_vles: 6364
+fact_assessment_results: 171047
+fact_registration: 32593
+Optimization exit code: 0
+
+========== LAB GOVERNANCE ==========
+=== Database Governance Lab ===
+[source] /Users/louezetheianilicirsaldua/Documents/GitHub/Data_Warehousing_4th/lesson_7/warehouse.db
+[source rows] dim_courses: 22
+[source rows] dim_assessments: 195
+[source rows] dim_vles: 6,364
+[source rows] dim_students: 32,593
+[source rows] fact_registration: 32,593
+[source rows] fact_assessment_results: 171,047
+[DDL] Created/verified constrained table.
+[DDL] Created/verified constrained table.
+[DDL] Created/verified constrained table.
+[DDL] Created/verified constrained table.
+[DDL] Created/verified constrained table.
+[DDL] Created/verified constrained table.
+[INDEX] CREATE INDEX IF NOT EXISTS idx_assessments_course ON dim_assessments (code_module, code_presentation);
+[INDEX] CREATE INDEX IF NOT EXISTS idx_vles_course ON dim_vles (code_module, code_presentation);
+[INDEX] CREATE INDEX IF NOT EXISTS idx_students_course_result ON dim_students (code_module, code_presentation, final_result);
+[INDEX] CREATE INDEX IF NOT EXISTS idx_registration_course_date ON fact_registration (code_module, code_presentation, date_registration);
+[INDEX] CREATE INDEX IF NOT EXISTS idx_results_student ON fact_assessment_results (id_student);
+[governed] Schema created in /Users/louezetheianilicirsaldua/Documents/GitHub/Data_Warehousing_4th/lesson_7/governed_warehouse.db
+
+--- dim_assessments ---
+CREATE TABLE dim_assessments (
+        id_assessment INTEGER PRIMARY KEY,
+        code_module TEXT NOT NULL CHECK (length(trim(code_module)) > 0),
+        code_presentation TEXT NOT NULL CHECK (length(trim(code_presentation)) > 0),
+        assessment_type TEXT NOT NULL CHECK (length(trim(assessment_type)) > 0),
+        date INTEGER,
+        weight REAL NOT NULL CHECK (weight >= 0 AND weight <= 100),
+        FOREIGN KEY (code_module, code_presentation)
+          REFERENCES dim_courses (code_module, code_presentation)
+    )
+
+--- dim_courses ---
+CREATE TABLE dim_courses (
+        code_module TEXT NOT NULL CHECK (length(trim(code_module)) > 0),
+        code_presentation TEXT NOT NULL CHECK (length(trim(code_presentation)) > 0),
+        module_presentation_length INTEGER NOT NULL CHECK (module_presentation_length > 0),
+        PRIMARY KEY (code_module, code_presentation)
+    )
+
+--- dim_students ---
+CREATE TABLE dim_students (
+        id_student INTEGER NOT NULL CHECK (id_student > 0),
+        code_module TEXT NOT NULL CHECK (length(trim(code_module)) > 0),
+        code_presentation TEXT NOT NULL CHECK (length(trim(code_presentation)) > 0),
+        gender TEXT NOT NULL CHECK (gender IN ('M', 'F')),
+        region TEXT NOT NULL CHECK (length(trim(region)) > 0),
+        highest_education TEXT NOT NULL CHECK (length(trim(highest_education)) > 0),
+        imd_band TEXT,
+        age_band TEXT NOT NULL CHECK (length(trim(age_band)) > 0),
+        num_of_prev_attempts INTEGER NOT NULL CHECK (num_of_prev_attempts >= 0),
+        studied_credits INTEGER NOT NULL CHECK (studied_credits > 0),
+        disability TEXT NOT NULL CHECK (disability IN ('Y', 'N')),
+        final_result TEXT NOT NULL CHECK (final_result IN ('Pass', 'Distinction', 'Fail', 'Withdrawn')),
+        PRIMARY KEY (id_student, code_module, code_presentation),
+        FOREIGN KEY (code_module, code_presentation)
+          REFERENCES dim_courses (code_module, code_presentation)
+    )
+
+--- dim_vles ---
+CREATE TABLE dim_vles (
+        id_site INTEGER PRIMARY KEY,
+        code_module TEXT NOT NULL CHECK (length(trim(code_module)) > 0),
+        code_presentation TEXT NOT NULL CHECK (length(trim(code_presentation)) > 0),
+        activity_type TEXT NOT NULL CHECK (length(trim(activity_type)) > 0),
+        week_from INTEGER,
+        week_to INTEGER,
+        CHECK (week_from IS NULL OR week_from >= 0),
+        CHECK (week_to IS NULL OR week_to >= 0),
+        CHECK (week_from IS NULL OR week_to IS NULL OR week_to >= week_from),
+        FOREIGN KEY (code_module, code_presentation)
+          REFERENCES dim_courses (code_module, code_presentation)
+    )
+
+--- fact_assessment_results ---
+CREATE TABLE fact_assessment_results (
+        id_assessment INTEGER NOT NULL,
+        id_student INTEGER NOT NULL CHECK (id_student > 0),
+        date_submitted INTEGER,
+        is_banked INTEGER NOT NULL CHECK (is_banked IN (0, 1)),
+        score REAL,
+        PRIMARY KEY (id_assessment, id_student),
+        CHECK (score IS NULL OR (score >= 0 AND score <= 100)),
+        FOREIGN KEY (id_assessment) REFERENCES dim_assessments (id_assessment)
+    )
+
+--- fact_registration ---
+CREATE TABLE fact_registration (
+        id_student INTEGER NOT NULL CHECK (id_student > 0),
+        code_module TEXT NOT NULL CHECK (length(trim(code_module)) > 0),
+        code_presentation TEXT NOT NULL CHECK (length(trim(code_presentation)) > 0),
+        date_registration INTEGER,
+        date_unregistration INTEGER,
+        PRIMARY KEY (id_student, code_module, code_presentation),
+        CHECK (date_registration IS NULL OR date_unregistration IS NULL OR date_unregistration >= date_registration),
+        FOREIGN KEY (id_student, code_module, code_presentation)
+          REFERENCES dim_students (id_student, code_module, code_presentation)
+    )
+[MongoDB] Validator snippet written to /Users/louezetheianilicirsaldua/Documents/GitHub/Data_Warehousing_4th/lesson_7/governance/mongo_schema_validation.js
+Governance exit code: 0
+
+========================================
+Finished: Fri Oct 16 00:01:23 PST 2026
+Optimization status: 0
+Governance status: 0
+========================================
